@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:untitled3/services/db.dart';
+import 'package:EducationalApp/services/db.dart';
 import 'models/task_controller.dart';
 import 'widgets/helpiconbutton.dart';
 import 'widgets/textcategorystatefulwidget.dart';
@@ -135,9 +135,10 @@ class _PrevNextWidgetState extends State<PrevNextWidget> {
                   Column(
                     children: [
                       TextCategoryStatefulWidget(value: TaskController.category!.category1, fontSize: 20, textData: widget.textData3, currentTaskIndex: TaskController.currentTaskIndex), // Виджет TextStatefulWidget над первой кнопкой категории
-                      CategoryOneIconButton(
+                      CategoryIconButton(
                         isCategoryEqual: _isCategoryEqual,
-                        categoryOneImageUrlData: widget.categoryOneImageUrlData,
+                        categoryImageUrlData: widget.categoryOneImageUrlData,
+                          areCategoriesEqual: areCategoriesEqual,
                       ),
                     ],
                   ),
@@ -145,9 +146,10 @@ class _PrevNextWidgetState extends State<PrevNextWidget> {
                   Column(
                     children: [
                       TextCategoryStatefulWidget(value: TaskController.category!.category2, fontSize: 20, textData: widget.textData4, currentTaskIndex: TaskController.currentTaskIndex), // Виджет TextStatefulWidget над второй кнопкой категории
-                      CategoryTwoIconButton(
+                      CategoryIconButton(
                         isCategoryEqual: _isCategoryEqual,
-                        categoryTwoImageUrlData: widget.categoryTwoImageUrlData,
+                        categoryImageUrlData: widget.categoryTwoImageUrlData,
+                        areCategoriesEqual: areCategoriesNotEqual,
                       ),
                     ],
                   ),

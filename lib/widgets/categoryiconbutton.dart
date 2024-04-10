@@ -1,43 +1,37 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:untitled3/models/task_controller.dart';
+import 'package:EducationalApp/models/task_controller.dart';
 
-class CategoryOneIconButton extends StatefulWidget {
-  final Map<String, dynamic>? categoryOneImageUrlData;
+class CategoryIconButton extends StatefulWidget {
   final bool isCategoryEqual;
+  final Map<String, dynamic>? categoryImageUrlData;
+  final bool Function(String?) areCategoriesEqual; // Функция для сравнения категорий
 
-  const CategoryOneIconButton({
+  const CategoryIconButton({
     required this.isCategoryEqual,
-    this.categoryOneImageUrlData,
+    this.categoryImageUrlData,
+    required this.areCategoriesEqual, // Обязательный параметр
   });
 
   @override
-  _CategoryOneIconButtonState createState() => _CategoryOneIconButtonState();
+  _CategoryIconButtonState createState() => _CategoryIconButtonState();
 }
 
-class _CategoryOneIconButtonState extends State<CategoryOneIconButton> {
+class _CategoryIconButtonState extends State<CategoryIconButton> {
   double _size = 110.0;
-  late bool _isCategoryEqual;
-  late Color _borderColor; // Цвет обводки кнопки
-
-  @override
-  void initState() {
-    super.initState();
-    _isCategoryEqual = widget.isCategoryEqual;
-  }
 
   @override
   Widget build(BuildContext context) {
-    String categoryOneImageUrl = widget.categoryOneImageUrlData!['params']['Image']['value'];
-
+    String categoryImageUrl = widget.categoryImageUrlData!['params']['Image']['value'];
     return GestureDetector(
       onTapDown: (_) {
         setState(() {
           _size = 80.0; // Уменьшаем размер при нажатии
         });
         Future.delayed(Duration(milliseconds: 200), () {
-          compareCategories(context); // Вызываем функцию сравнения категорий после небольшой задержки
-        }); // Вызываем функцию сравнения категорий
+          compareCategories(context, widget.areCategoriesEqual); // Вызываем переданную функцию сравнения категорий после небольшой задержки
+        });
+
       },
       onTapUp: (_) {
         setState(() {
@@ -59,7 +53,7 @@ class _CategoryOneIconButtonState extends State<CategoryOneIconButton> {
           splashColor: Colors.transparent, // Установка цвета эффекта подъема
           onPressed: () {}, // Пустая функция onPressed, так как обработка нажатия происходит в onTapDown
           child: Image.network(
-            categoryOneImageUrl,
+            categoryImageUrl,
             width: 110,
             height: 110,
           ),
@@ -67,20 +61,23 @@ class _CategoryOneIconButtonState extends State<CategoryOneIconButton> {
       ),
     );
   }
-
-
-
 }
-void compareCategories(BuildContext context) async {
-  String? categoryFromFirestore = await TaskController.tasks[TaskController.currentTaskIndex].name_categories;
-  bool areEqual = areCategoriesEqual(categoryFromFirestore);
 
+void compareCategories(BuildContext context, bool Function(String?) areCategoriesEqual) async {
+  String? categoryFromFirestore = await TaskController.tasks[TaskController.currentTaskIndex].name_categories;
+  bool result = areCategoriesEqual(categoryFromFirestore);
+  TaskController.tasks[TaskController.currentTaskIndex].isAnswered = true;
+  if(result) {
+    TaskController.tasks[TaskController.currentTaskIndex].isTrueAnswer = true;
+    TaskController.score++;
+    print(TaskController.score);
+  }
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
       title: Text('Результат'),
       content: Text(
-        areEqual ? 'Ты выбрал правильный ответ!' : 'Ты выбрал неправильный ответ!',
+        result ? 'Ты выбрал правильный ответ!' : 'Ты выбрал неправильный ответ!',
         style: TextStyle(fontSize: 20), // Установите желаемый размер шрифта здесь
       ),
       actions: [
@@ -91,33 +88,7 @@ void compareCategories(BuildContext context) async {
           child: Text('OK'),
         ),
       ],
-      backgroundColor: areEqual ? Colors.green[100] : Colors.red[100], // Цвет фона AlertDialog
-    ),
-  );
-}
-
-void compareCategories2(BuildContext context) async {
-  String? categoryFromFirestore = await TaskController.tasks[TaskController.currentTaskIndex].name_categories;
-  bool areEqual = areCategoriesEqual2(categoryFromFirestore);
-
-  showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text('Результат'),
-      content: Text(
-        areEqual ? 'Ты выбрал правильный ответ!' : 'Ты выбрал неправильный ответ!',
-        style: TextStyle(fontSize: 20), // Установите желаемый размер шрифта здесь
-      ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: Text('OK'),
-        ),
-      ],
-      backgroundColor: areEqual ? Colors.green[100] : Colors.red[100], // Цвет фона AlertDialog
-
+      backgroundColor: result ? Colors.green[100] : Colors.red[100], // Цвет фона AlertDialog
     ),
   );
 }
@@ -132,7 +103,7 @@ bool areCategoriesEqual(String? categoryFromFirestore) {
   }
 }
 
-bool areCategoriesEqual2(String? categoryFromFirestore) {
+bool areCategoriesNotEqual(String? categoryFromFirestore) {
   String? categoryFromImageData = TaskController.category?.name;
 
   if (categoryFromFirestore != null && categoryFromImageData != null) {
@@ -142,59 +113,3 @@ bool areCategoriesEqual2(String? categoryFromFirestore) {
   }
 }
 
-class CategoryTwoIconButton extends StatefulWidget {
-  final bool isCategoryEqual;
-  final Map<String, dynamic>? categoryTwoImageUrlData;
-
-  const CategoryTwoIconButton({required this.isCategoryEqual, this.categoryTwoImageUrlData});
-
-  @override
-  _CategoryTwoIconButtonState createState() => _CategoryTwoIconButtonState();
-}
-
-class _CategoryTwoIconButtonState extends State<CategoryTwoIconButton> {
-  double _size = 110.0;
-
-  @override
-  Widget build(BuildContext context) {
-    String categoryTwoImageUrl = widget.categoryTwoImageUrlData!['params']['Image']['value'];
-    return GestureDetector(
-      onTapDown: (_) {
-        setState(() {
-          _size = 80.0; // Уменьшаем размер при нажатии
-        });
-        Future.delayed(Duration(milliseconds: 200), () {
-          compareCategories2(context); // Вызываем функцию сравнения категорий после небольшой задержки
-        });
-
-      },
-      onTapUp: (_) {
-        setState(() {
-          _size = 110.0; // Возвращаем размер обратно при отпускании
-        });
-      },
-      onTapCancel: () {
-        setState(() {
-          _size = 110.0; // Возвращаем размер обратно при отпускании
-        });
-      },
-
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 200), // Длительность анимации
-        width: _size,
-        height: _size,
-        child: MaterialButton(
-          minWidth: 110,
-          height: 110,
-          splashColor: Colors.transparent, // Установка цвета эффекта подъема
-          onPressed: () {}, // Пустая функция onPressed, так как обработка нажатия происходит в onTapDown
-          child: Image.network(
-            categoryTwoImageUrl,
-            width: 110,
-            height: 110,
-          ),
-        ),
-      ),
-    );
-  }
-}

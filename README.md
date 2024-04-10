@@ -1,4 +1,4 @@
-# untitled3
+# EducationalApp
 
 A new Flutter project.
 

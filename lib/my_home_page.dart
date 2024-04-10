@@ -7,7 +7,7 @@ import 'services/storage_service.dart';  // Импортируйте ваш Stor
 import 'page_widgets.dart';
 import 'models/task_controller.dart';
 import 'models/object_model.dart';
-import 'package:untitled3/services/db.dart';
+import 'package:EducationalApp/services/db.dart';
 
 class MyHomePage extends StatefulWidget {
   @override

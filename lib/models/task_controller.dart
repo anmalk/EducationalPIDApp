@@ -1,4 +1,4 @@
-import 'package:untitled3/models/object_model.dart';
+import 'package:EducationalApp/models/object_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -9,7 +9,7 @@ class TaskController {
   static double currentValue = 0;
   static int length = 0;
   static Category? category;
-  int score = 0;
+  static int score = 0;
 
   static Future<void> loadTasksFromFirestore() async {
     try {

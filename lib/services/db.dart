@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:untitled3/models/object_model.dart';
-import 'package:untitled3/models/task_controller.dart';
+import 'package:EducationalApp/models/object_model.dart';
+import 'package:EducationalApp/models/task_controller.dart';
 
 
 class DatabaseService {
