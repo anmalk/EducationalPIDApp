@@ -35,7 +35,9 @@ class _CategoryOneIconButtonState extends State<CategoryOneIconButton> {
         setState(() {
           _size = 80.0; // Уменьшаем размер при нажатии
         });
-        compareCategories(context); // Вызываем функцию сравнения категорий
+        Future.delayed(Duration(milliseconds: 200), () {
+          compareCategories(context); // Вызываем функцию сравнения категорий после небольшой задержки
+        }); // Вызываем функцию сравнения категорий
       },
       onTapUp: (_) {
         setState(() {
@@ -70,7 +72,7 @@ class _CategoryOneIconButtonState extends State<CategoryOneIconButton> {
 
 }
 void compareCategories(BuildContext context) async {
-  String? categoryFromFirestore = await getCategoryFromFirestore();
+  String? categoryFromFirestore = await TaskController.tasks[TaskController.currentTaskIndex].name_categories;
   bool areEqual = areCategoriesEqual(categoryFromFirestore);
 
   showDialog(
@@ -95,7 +97,7 @@ void compareCategories(BuildContext context) async {
 }
 
 void compareCategories2(BuildContext context) async {
-  String? categoryFromFirestore = await getCategoryFromFirestore();
+  String? categoryFromFirestore = await TaskController.tasks[TaskController.currentTaskIndex].name_categories;
   bool areEqual = areCategoriesEqual2(categoryFromFirestore);
 
   showDialog(
@@ -118,31 +120,6 @@ void compareCategories2(BuildContext context) async {
 
     ),
   );
-}
-
-
-Future<String?> getCategoryFromFirestore() async {
-  try {
-    QuerySnapshot<Map<String, dynamic>> querySnapshot =
-    await FirebaseFirestore.instance.collection('objects').get();
-
-    if (querySnapshot.docs.isNotEmpty) {
-      QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-      querySnapshot.docs[TaskController.currentTaskIndex];
-
-      String categoryFromFirestore = documentSnapshot['category'];
-
-      print('Category from Firestore: $categoryFromFirestore');
-
-      return categoryFromFirestore;
-    } else {
-      print('No documents found');
-      return null;
-    }
-  } catch (e) {
-    print('Error loading category from Firestore: $e');
-    return null;
-  }
 }
 
 bool areCategoriesEqual(String? categoryFromFirestore) {
@@ -186,7 +163,9 @@ class _CategoryTwoIconButtonState extends State<CategoryTwoIconButton> {
         setState(() {
           _size = 80.0; // Уменьшаем размер при нажатии
         });
-        compareCategories2(context); // Вызываем функцию сравнения категорий
+        Future.delayed(Duration(milliseconds: 200), () {
+          compareCategories2(context); // Вызываем функцию сравнения категорий после небольшой задержки
+        });
 
       },
       onTapUp: (_) {
