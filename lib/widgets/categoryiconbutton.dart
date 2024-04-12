@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:EducationalApp/models/task_controller.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class CategoryIconButton extends StatefulWidget {
   final bool isCategoryEqual;
@@ -72,6 +73,17 @@ void compareCategories(BuildContext context, bool Function(String?) areCategorie
     TaskController.score++;
     print(TaskController.score);
   }
+
+  final player = AudioPlayer();
+
+
+    if (result) {
+      await player.play(AssetSource('sounds/true.mp3'));
+    } else {
+      await player.play(AssetSource('sounds/false.mp3'));
+    }
+
+
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
