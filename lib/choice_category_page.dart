@@ -128,10 +128,39 @@ Widget buildChoicePage(Map<String, dynamic>? pageData) {
             ChoiceData: pageData['Select category']['choise_image']['params']['Image'],
           ),
         ),
+        SizedBox(height: 20), // Пустое пространство между кнопкой и карточками
+        FutureBuilder<QuerySnapshot>(
+          future: FirebaseFirestore.instance.collection('categories').get(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator(); // Отображаем индикатор загрузки, пока данные загружаются
+            }
+            if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}'); // Отображаем сообщение об ошибке, если произошла ошибка при загрузке данных
+            }
+            final List<DocumentSnapshot> documents = snapshot.data!.docs;
+            return ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(), // Отключаем возможность прокрутки ListView
+              itemCount: documents.length,
+              itemBuilder: (context, index) {
+                final Map<String, dynamic> data = documents[index].data() as Map<String, dynamic>;
+                return Card(
+                  child: ListTile(
+                    title: Text(data['name']),
+                    subtitle: Image.network(data['url']),
+                    // В этом месте можно добавить обработчик нажатия на карточку
+                  ),
+                );
+              },
+            );
+          },
+        ),
       ],
     ),
   );
 }
+
 
 class TextChoiceStatefulWidget extends StatefulWidget {
   static _TextChoiceStatefulWidgetState? _textChoiceStatefulWidgetState;
