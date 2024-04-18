@@ -2,6 +2,7 @@ import'package:flutter/material.dart';
 import 'my_home_page.dart';
 import 'autorization/autorization_page.dart';
 import 'autorization/login_page.dart';
+import 'choice_category_page.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -12,6 +13,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const NavigationExample(),
         '/login': (context) => LoginPage(), // Назначаем маршрут для страницы логина
+        '/choice': (context) => ChoiceCategoryPage(), // Назначаем маршрут для страницы логина
       },
     );
   }
@@ -51,11 +53,16 @@ class _NavigationExampleState extends State<NavigationExample> {
             icon: Badge(child: Icon(Icons.account_circle)),
             label: 'Authorization',
           ),
+          NavigationDestination(
+            icon: Badge(child: Icon(Icons.category)),
+            label: 'Choice Category',
+          ),
         ],
       ),
       body: <Widget>[
         MyHomePage(), // Ваш виджет для домашней страницы
         AutorizationPage(), // Ваш виджет для страницы авторизации
+        ChoiceCategoryPage(),
       ][currentPageIndex],
     );
   }

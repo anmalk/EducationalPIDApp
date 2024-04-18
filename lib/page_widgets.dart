@@ -9,7 +9,7 @@ import 'models/object_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
-Widget buildPage(Map<String, dynamic>? pageData) {
+Widget buildHomePage(Map<String, dynamic>? pageData) {
 
   if (pageData == null || pageData.isEmpty) {
     return Center(

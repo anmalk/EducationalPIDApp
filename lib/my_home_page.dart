@@ -99,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ? Center(
         child: CircularProgressIndicator(),
       )
-          : buildPage(jsonData['item']['settings']?['pages']),
+          : buildHomePage(jsonData['item']['settings']?['pages']),
     );
   }
 }
