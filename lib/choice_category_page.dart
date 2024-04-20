@@ -8,6 +8,7 @@ import 'page_widgets.dart';
 import 'models/task_controller.dart';
 import 'models/object_model.dart';
 import 'package:EducationalApp/services/db.dart';
+import 'my_home_page.dart';
 
 class ChoiceCategoryPage extends StatefulWidget {
   @override
@@ -149,7 +150,14 @@ Widget buildChoicePage(Map<String, dynamic>? pageData) {
                   child: ListTile(
                     title: Text(data['name']),
                     subtitle: Image.network(data['url']),
-                    // В этом месте можно добавить обработчик нажатия на карточку
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MyHomePage(name: data['name']),
+                        ),
+                      );
+                    },
                   ),
                 );
               },

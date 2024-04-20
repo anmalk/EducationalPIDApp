@@ -60,7 +60,7 @@ class _NavigationExampleState extends State<NavigationExample> {
         ],
       ),
       body: <Widget>[
-        MyHomePage(), // Ваш виджет для домашней страницы
+        MyHomePage(name: '!!!!!!!!!!!!',), // Ваш виджет для домашней страницы
         AutorizationPage(), // Ваш виджет для страницы авторизации
         ChoiceCategoryPage(),
       ][currentPageIndex],

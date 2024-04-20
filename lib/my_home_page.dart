@@ -10,6 +10,10 @@ import 'models/object_model.dart';
 import 'package:EducationalApp/services/db.dart';
 
 class MyHomePage extends StatefulWidget {
+  final String name;
+
+  MyHomePage({required this.name});
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -23,6 +27,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    print('Выбранная категория: ${widget.name}');
     initFirebase();
     jsonData = {};
     fetchData();
@@ -35,14 +40,14 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
     print(TaskController.currentTaskIndex);
-    print('Задачи загружены:');
-    for (Object task in TaskController.tasks) {
-      print('ID: ${task.id_objects}');
-      print('Name: ${task.name}');
-      print('Category Name: ${task.name_categories}');
-      print('URL: ${task.url}');
-      print('--------------------');
-    }
+    // print('Задачи загружены:');
+    // for (Object task in TaskController.tasks) {
+    //   print('ID: ${task.id_objects}');
+    //   print('Name: ${task.name}');
+    //   print('Category Name: ${task.name_categories}');
+    //   print('URL: ${task.url}');
+    //   print('--------------------');
+    // }
     getCategoryData().then((category) {
       setState(() {
         TaskController.category = category;
