@@ -138,7 +138,7 @@ class _PrevNextWidgetState extends State<PrevNextWidget> {
                       CategoryIconButton(
                         isCategoryEqual: _isCategoryEqual,
                         categoryImageUrlData: widget.categoryOneImageUrlData,
-                          areCategoriesEqual: areCategoriesEqual,
+                        areCategoriesEqual: areCategoriesEqual,
                       ),
                     ],
                   ),

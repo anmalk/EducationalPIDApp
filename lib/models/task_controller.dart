@@ -11,10 +11,12 @@ class TaskController {
   static Category? category;
   static int score = 0;
 
-  static Future<void> loadTasksFromFirestore() async {
+  static Future<void> loadTasksFromFirestore(String name, String name_false_category) async {
     try {
-      QuerySnapshot<Map<String, dynamic>> querySnapshot =
-      await FirebaseFirestore.instance.collection('objects').get();
+      QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance
+          .collection('objects')
+          .where('category', whereIn: [name, name_false_category])
+          .get();
 
       tasks.clear(); // Очищаем список перед загрузкой новых данных
 

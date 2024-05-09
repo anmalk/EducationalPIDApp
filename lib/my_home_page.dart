@@ -11,8 +11,9 @@ import 'package:EducationalApp/services/db.dart';
 
 class MyHomePage extends StatefulWidget {
   final String name;
+  final String name_false_category;
 
-  MyHomePage({required this.name});
+  MyHomePage({required this.name, required this.name_false_category});
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -28,13 +29,13 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     print('Выбранная категория: ${widget.name}');
-    initFirebase();
+    DatabaseService.initFirebase();
     jsonData = {};
     fetchData();
 
 
     // Вызываем метод загрузки задач из Firestore
-    TaskController.loadTasksFromFirestore().then((_) {
+    TaskController.loadTasksFromFirestore(widget.name, widget.name_false_category).then((_) {
       // Делаем что-то после загрузки задач
       TaskController.length = TaskController.tasks.length;
     });
@@ -48,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //   print('URL: ${task.url}');
     //   print('--------------------');
     // }
-    getCategoryData().then((category) {
+    DatabaseService.getCategoryData().then((category) {
       setState(() {
         TaskController.category = category;
       });
@@ -97,9 +98,20 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        // Добавляем кнопку "назад" на верхней панели навигации
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop(); // Возвращает на предыдущий экран
+          },
+        ),
+        title: Text('EducationalApp'),
+      ),
       body: jsonData == null || jsonData.isEmpty
           ? Center(
         child: CircularProgressIndicator(),

@@ -45,24 +45,20 @@ class _NavigationExampleState extends State<NavigationExample> {
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
+            icon: Badge(child: Icon(Icons.category)),
+            label: 'Choice Category',
           ),
           NavigationDestination(
             icon: Badge(child: Icon(Icons.account_circle)),
             label: 'Authorization',
           ),
-          NavigationDestination(
-            icon: Badge(child: Icon(Icons.category)),
-            label: 'Choice Category',
-          ),
+
         ],
       ),
       body: <Widget>[
-        MyHomePage(name: '!!!!!!!!!!!!',), // Ваш виджет для домашней страницы
-        AutorizationPage(), // Ваш виджет для страницы авторизации
+        //MyHomePage(name: '!!!!!!!!!!!!', name_false_category: 'dghdfghdfg',), // Ваш виджет для домашней страницы
         ChoiceCategoryPage(),
+        AutorizationPage(), // Ваш виджет для страницы авторизации
       ][currentPageIndex],
     );
   }

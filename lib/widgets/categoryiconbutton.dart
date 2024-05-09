@@ -77,11 +77,11 @@ void compareCategories(BuildContext context, bool Function(String?) areCategorie
   final player = AudioPlayer();
 
 
-    if (result) {
-      await player.play(AssetSource('sounds/true.mp3'));
-    } else {
-      await player.play(AssetSource('sounds/false.mp3'));
-    }
+  if (result) {
+    await player.play(AssetSource('sounds/true.mp3'));
+  } else {
+    await player.play(AssetSource('sounds/false.mp3'));
+  }
 
 
   showDialog(
@@ -124,4 +124,3 @@ bool areCategoriesNotEqual(String? categoryFromFirestore) {
     return false;
   }
 }
-

@@ -7,13 +7,15 @@ import 'package:EducationalApp/models/task_controller.dart';
 
 class DatabaseService {
   // Метод для загрузки данных из Firestore и сохранения их в список объектов
-  static Future<List<Object>> getObjects() async {
+  static Future<List<Object>> getObjects(String name, String name_false_category) async {
     List<Object> objects = [];
 
     try {
       // Получаем доступ к коллекции объектов в Firestore
-      QuerySnapshot<Map<String, dynamic>> querySnapshot =
-      await FirebaseFirestore.instance.collection('objects').get();
+      QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance
+          .collection('objects')
+          .where('category', whereIn: [name, name_false_category])
+          .get();
 
       // Перебираем все документы в коллекции и добавляем их в список объектов
       querySnapshot.docs.forEach((doc) {
@@ -32,49 +34,53 @@ class DatabaseService {
       return []; // Возвращаем пустой список в случае ошибки
     }
   }
-}
 
+  static initFirebase() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+  }
 
+  Future<int> getCountOfObjects() async {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot =
+    await FirebaseFirestore.instance.collection('objects').get();
 
-void initFirebase() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-}
+    int count = querySnapshot.size; // Получаем количество документов в коллекции
+    print('Количество документов в коллекции "objects": $count');
 
-Future<int> getCountOfObjects() async {
-  QuerySnapshot<Map<String, dynamic>> querySnapshot =
-  await FirebaseFirestore.instance.collection('objects').get();
+    return count;
+  }
 
-  int count = querySnapshot.size; // Получаем количество документов в коллекции
-  print('Количество документов в коллекции "objects": $count');
+  static Future<Category?> getCategoryData() async {
+    try {
+      DocumentReference documentReference =
+      FirebaseFirestore.instance.collection('categories').doc('1');
 
-  return count;
-}
+      DocumentSnapshot snapshot = await documentReference.get();
 
-Future<Category?> getCategoryData() async {
-  try {
-    DocumentReference documentReference =
-    FirebaseFirestore.instance.collection('categories').doc('1');
-
-    DocumentSnapshot snapshot = await documentReference.get();
-
-    if (snapshot.exists) {
-      // Документ существует, создаем объект Category и возвращаем его
-      return Category(
-        id: snapshot.id,
-        name: snapshot['name'],
-        category1: snapshot['category1'],
-        category2: snapshot['category2'],
-      );
-    } else {
-      print('Document does not exist');
+      if (snapshot.exists) {
+        // Документ существует, создаем объект Category и возвращаем его
+        return Category(
+          id: snapshot.id,
+          name: snapshot['name'],
+          category1: snapshot['category1'],
+          category2: snapshot['category2'],
+        );
+      } else {
+        print('Document does not exist');
+        return null;
+      }
+    } catch (e) {
+      print('Error reading document: $e');
       return null;
     }
-  } catch (e) {
-    print('Error reading document: $e');
-    return null;
   }
+
 }
+
+
+
+
+
 
 
 

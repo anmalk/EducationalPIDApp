@@ -24,16 +24,12 @@ class _ChoiceCategoryPageState extends State<ChoiceCategoryPage> {
   @override
   void initState() {
     super.initState();
-    initFirebase();
+    DatabaseService.initFirebase();
     jsonData = {};
     fetchData();
 
 
-    // Вызываем метод загрузки задач из Firestore
-    TaskController.loadTasksFromFirestore().then((_) {
-      // Делаем что-то после загрузки задач
-      TaskController.length = TaskController.tasks.length;
-    });
+
 
     print(TaskController.currentTaskIndex);
     print('Задачи загружены:');
@@ -44,7 +40,7 @@ class _ChoiceCategoryPageState extends State<ChoiceCategoryPage> {
       print('URL: ${task.url}');
       print('--------------------');
     }
-    getCategoryData().then((category) {
+    DatabaseService.getCategoryData().then((category) {
       setState(() {
         TaskController.category = category;
       });
@@ -154,7 +150,7 @@ Widget buildChoicePage(Map<String, dynamic>? pageData) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => MyHomePage(name: data['name']),
+                          builder: (context) => MyHomePage(name: data['name'], name_false_category: data['name_false_category']),
                         ),
                       );
                     },
