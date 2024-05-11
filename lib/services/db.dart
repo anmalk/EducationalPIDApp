@@ -50,15 +50,16 @@ class DatabaseService {
     return count;
   }
 
-  static Future<Category?> getCategoryData() async {
+  static Future<Category?> getCategoryData(String name) async {
     try {
-      DocumentReference documentReference =
-      FirebaseFirestore.instance.collection('categories').doc('1');
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('categories')
+          .where('name', isEqualTo: name) // Замените 'ваше_значение_name' на фактическое имя
+          .get();
 
-      DocumentSnapshot snapshot = await documentReference.get();
-
-      if (snapshot.exists) {
-        // Документ существует, создаем объект Category и возвращаем его
+      if (querySnapshot.docs.isNotEmpty) {
+        // Если найден хотя бы один документ, берем первый и создаем объект Category
+        DocumentSnapshot snapshot = querySnapshot.docs.first;
         return Category(
           id: snapshot.id,
           name: snapshot['name'],
@@ -74,7 +75,6 @@ class DatabaseService {
       return null;
     }
   }
-
 }
 
 

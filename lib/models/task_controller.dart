@@ -37,7 +37,7 @@ class TaskController {
   }
 
   static void showNextImage() {
-    currentTaskIndex = (currentTaskIndex + 1) % length;
+    currentTaskIndex = (currentTaskIndex + 1);
   }
 
   static void showPrevImage() {

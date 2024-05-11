@@ -9,15 +9,16 @@ import 'models/task_controller.dart';
 import 'models/object_model.dart';
 import 'package:EducationalApp/services/db.dart';
 import 'my_home_page.dart';
+import 'choice_category_page.dart';
 
-class ChoiceCategoryPage extends StatefulWidget {
+class ResultPage extends StatefulWidget {
   @override
-  _ChoiceCategoryPageState createState() => _ChoiceCategoryPageState();
+  _ResultPageState createState() => _ResultPageState();
 }
 
-class _ChoiceCategoryPageState extends State<ChoiceCategoryPage> {
+class _ResultPageState extends State<ResultPage> {
   late Map<String, dynamic> jsonData;
-  final StorageService storageService = StorageService();  // Создайте экземпляр StorageService
+  final StorageService storageService = StorageService(); // Создайте экземпляр StorageService
   late String id = ''; // замените 'id' на актуальное поле из ответа сервера
 
 
@@ -28,9 +29,6 @@ class _ChoiceCategoryPageState extends State<ChoiceCategoryPage> {
     jsonData = {};
     fetchData();
 
-
-
-
     print(TaskController.currentTaskIndex);
     print('Задачи загружены:');
     for (Object task in TaskController.tasks) {
@@ -40,9 +38,7 @@ class _ChoiceCategoryPageState extends State<ChoiceCategoryPage> {
       print('URL: ${task.url}');
       print('--------------------');
     }
-
   }
-
 
   Future<void> fetchData() async {
     try {
@@ -50,16 +46,19 @@ class _ChoiceCategoryPageState extends State<ChoiceCategoryPage> {
       final String? token = await storageService.getToken();
       try {
         final response = await http.post(
-          Uri.parse('https://ait2-vladislav001.amvera.io/api/v1/information/pid'),
+          Uri.parse(
+              'https://ait2-vladislav001.amvera.io/api/v1/information/pid'),
           headers: {
             'x-access-token': '$token',
-            'Content-Type': 'application/json',  // Укажите тип контента, если это приложение/JSON
+            'Content-Type': 'application/json',
+            // Укажите тип контента, если это приложение/JSON
           },
         );
 
         if (response.statusCode == 200) {
           final Map<String, dynamic> responseData = json.decode(response.body);
-          id = responseData['_id']; // замените 'id' на актуальное поле из ответа сервера
+          id =
+          responseData['_id']; // замените 'id' на актуальное поле из ответа сервера
           print('ID: $id');
         } else {
           print('Error: ${response.statusCode}');
@@ -69,7 +68,8 @@ class _ChoiceCategoryPageState extends State<ChoiceCategoryPage> {
       }
 
       final response = await http.get(
-        Uri.parse('https://ait2-vladislav001.amvera.io/api/configuration_module/settings/item/66153763bca893857e412279/$id'),
+        Uri.parse(
+            'https://ait2-vladislav001.amvera.io/api/configuration_module/settings/item/66153763bca893857e412279/$id'),
         headers: {'Authorization': 'Bearer $token'},
       );
 
@@ -93,74 +93,65 @@ class _ChoiceCategoryPageState extends State<ChoiceCategoryPage> {
           ? Center(
         child: CircularProgressIndicator(),
       )
-          : buildChoicePage(jsonData['item']['settings']?['pages']),
-    );
-  }
-}
-
-Widget buildChoicePage(Map<String, dynamic>? pageData) {
-  if (pageData == null || pageData.isEmpty) {
-    return Center(
-      child: Text('Page data is empty.'),
+          : buildChoicePage(context, jsonData['item']['settings']?['pages']),
     );
   }
 
-  return SingleChildScrollView(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SizedBox(height: 100),
-        TextChoiceStatefulWidget(fontSize: 30, textData: pageData['Select category']['Text_category']['params']['Is visible']),
-        SizedBox(height: 40), // Пустое пространство для отступа
-        Center(
-          child: ChoiceButton(
-            onPressed: () {
-              // Обработчик нажатия кнопки
-            },
-            ChoiceData: pageData['Select category']['choise_image']['params']['Image'],
-          ),
-        ),
-        SizedBox(height: 20), // Пустое пространство между кнопкой и карточками
-        FutureBuilder<QuerySnapshot>(
-          future: FirebaseFirestore.instance.collection('categories').get(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator(); // Отображаем индикатор загрузки, пока данные загружаются
-            }
-            if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}'); // Отображаем сообщение об ошибке, если произошла ошибка при загрузке данных
-            }
-            final List<DocumentSnapshot> documents = snapshot.data!.docs;
-            return ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(), // Отключаем возможность прокрутки ListView
-              itemCount: documents.length,
-              itemBuilder: (context, index) {
-                final Map<String, dynamic> data = documents[index].data() as Map<String, dynamic>;
-                return Card(
-                  child: ListTile(
-                    title: Text(data['name']),
-                    subtitle: Image.network(data['url']),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MyHomePage(name: data['name'], name_false_category: data['name_false_category']),
-                        ),
-                      );
-                    },
-                  ),
-                );
+  Widget buildChoicePage(BuildContext context, Map<String, dynamic>? pageData) {
+    if (pageData == null || pageData.isEmpty) {
+      return Center(
+        child: Text('Page data is empty.'),
+      );
+    }
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: 100),
+          TextChoiceStatefulWidget(fontSize: 30,
+              textData: pageData['Select category']['Text_category']['params']['Is visible']),
+          SizedBox(height: 40),
+          // Пустое пространство для отступа
+          Center(
+            child: ChoiceButton(
+              onPressed: () {
+                // Обработчик нажатия кнопки
               },
-            );
-          },
-        ),
-      ],
-    ),
-  );
+              ChoiceData: pageData['Select category']['choise_image']['params']['Image'],
+            ),
+          ),
+          SizedBox(height: 20),
+          // Пустое пространство между кнопкой и карточками
+          // Здесь будет иконка завершения и текстовая надпись
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.done_all, color: Colors.green, size: 100),
+                // Иконка завершения
+                Text("Поздравляю! Ты прошёл данный тренажёр!",
+                    style: TextStyle(fontSize: 24, color: Colors.green)),
+                // Текстовая надпись
+              ],
+            ),
+          ),
+          // Добавляем кнопку закрытия страницы
+          MaterialButton(
+            onPressed: () {
+              // Переход на страницу ChoiceCategoryPage
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ChoiceCategoryPage()),
+              );
+            },
+            child: Text("Закрыть"),
+          ),
+        ],
+      ),
+    );
+  }
 }
-
 
 class TextChoiceStatefulWidget extends StatefulWidget {
   static _TextChoiceStatefulWidgetState? _textChoiceStatefulWidgetState;
@@ -184,7 +175,7 @@ class _TextChoiceStatefulWidgetState extends State<TextChoiceStatefulWidget> {
     return Visibility(
       visible: isVisible, // Используем параметр visible для управления видимостью
       child: Text(
-        'Выбери категорию',
+        'Результаты',
         style: TextStyle(
           fontSize: widget.fontSize,
         ),

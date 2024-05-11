@@ -7,7 +7,7 @@ import 'widgets/categoryiconbutton.dart';
 import 'widgets/functions.dart';
 import 'models/object_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'result_page.dart';
 
 Widget buildHomePage(Map<String, dynamic>? pageData) {
 
@@ -292,6 +292,17 @@ class _NextWidgetState extends State<NextWidget> {
         onPressed: () {
           setState(() {
             TaskController.showNextImage();
+            print(TaskController.currentTaskIndex);
+            print(TaskController.length);
+            if (TaskController.currentTaskIndex == TaskController.length) {
+              setState(() {
+                // Переход на страницу ResultPage
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ResultPage()),
+                );
+              });
+            }
             TaskController.countValue();
             ImageWidget._imageWidgetState?.updateImage();
             TextStatefulWidget._textStatefulWidgetState?.updateText();

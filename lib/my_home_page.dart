@@ -49,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //   print('URL: ${task.url}');
     //   print('--------------------');
     // }
-    DatabaseService.getCategoryData().then((category) {
+    DatabaseService.getCategoryData(widget.name).then((category) {
       setState(() {
         TaskController.category = category;
       });
