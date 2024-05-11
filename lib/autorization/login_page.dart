@@ -75,11 +75,18 @@ class _LoginPageState extends State<LoginPage> {
         await storageService.saveToken(token!);
 
         print('Token: $token');
+        navigateToHomePage();
       } else {
         print('Error: ${response.statusCode}');
+        if (response.statusCode == 401) {
+          // Показываем диалоговое окно только в случае ошибки 401
+          showLoginDialog();
+        }
       }
     } catch (error) {
       print('Error: $error');
+      // Показываем диалоговое окно в случае других ошибок
+      showLoginDialog();
     }
   }
 
@@ -89,26 +96,43 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void showLoginDialog() {
-    showDialog(
+    showModalBottomSheet(
       context: context,
+      backgroundColor: Colors.red, // Устанавливаем красный цвет фона
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Login Details'),
-          content: Column(
+        return Container(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Selected Login Pictograms: $selectedLoginValues'),
-              Text('Selected Password Pictograms: $selectedPasswordValues'),
+              Text(
+                'Ошибка',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white, // Устанавливаем белый цвет текста
+                ),
+              ),
+              SizedBox(height: 8.0),
+              Text(
+                'Введённые логин и/или пароль неверен или отсутствует интернет-соединение! Пожалуйста, проверьте ваше интернет-соединение или введите верный логин и пароль!',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.white, // Устанавливаем белый цвет текста
+                ),
+              ),
+              SizedBox(height: 16.0),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Закрываем BottomSheet
+                  },
+                  child: Text('Закрыть сообщение'),
+                ),
+              ),
             ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                navigateToHomePage();
-              },
-              child: Text('Close'),
-            ),
-          ],
         );
       },
     );
@@ -124,6 +148,18 @@ class _LoginPageState extends State<LoginPage> {
             Navigator.pop(context);
           },
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: IconButton(
+              icon: Icon(Icons.close),
+              onPressed: () {
+                // Происходит переход на MyApp
+                Navigator.pushReplacementNamed(context, '/');
+              },
+            ),
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -173,7 +209,6 @@ class _LoginPageState extends State<LoginPage> {
             padding: const EdgeInsets.only(bottom: 16.0),
             child: ElevatedButton(
               onPressed: () {
-                showLoginDialog();
                 performLogin();
               },
               style: ElevatedButton.styleFrom(

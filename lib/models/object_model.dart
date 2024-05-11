@@ -41,3 +41,17 @@ class Category {
     required this.category2,
   });
 }
+
+class User {
+  final String id;
+  final String name;
+  final String sex;
+  final int age;
+
+  const User({
+    required this.id,
+    required this.name,
+    required this.sex,
+    required this.age,
+  });
+}

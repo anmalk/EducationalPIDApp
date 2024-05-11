@@ -8,6 +8,8 @@ import 'widgets/functions.dart';
 import 'models/object_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'result_page.dart';
+import 'dart:async';
+
 
 Widget buildHomePage(Map<String, dynamic>? pageData) {
 
@@ -88,11 +90,22 @@ class _PrevNextWidgetState extends State<PrevNextWidget> {
       children: [
         Row(
           children: [
-            PrevWidget(prevData: widget.prevData),
-            Spacer(), // Равномерно распределить пространство между Prev и Next
-            TextCategoryStatefulWidget(value: TaskController.category!.name, fontSize: 40, textData: widget.textData, currentTaskIndex: TaskController.currentTaskIndex), // Новый stateful виджет текстового поля
-            Spacer(), // Равномерно распределить пространство между Next и новым виджетом
-            NextWidget(nextData: widget.nextData),
+            Expanded(
+              child: PrevWidget(prevData: widget.prevData),
+            ),
+            Expanded(
+              flex: 3, // Увеличьте этот flex, чтобы AutoScrollText занимал больше места
+              child: Center(
+                child: AutoScrollText(
+                  text: TaskController.category!.name,
+                  textStyle: TextStyle(fontSize: 40.0), // Размер шрифта по вашему выбору
+                  scrollSpeed: 50.0, // Скорость прокрутки по вашему выбору
+                ),
+              ),
+            ),
+            Expanded(
+              child: NextWidget(nextData: widget.nextData),
+            ),
           ],
         ),
         SizedBox(height: 10), // Вы можете настроить нужный вам вертикальный отступ
@@ -122,16 +135,8 @@ class _PrevNextWidgetState extends State<PrevNextWidget> {
               Center(
                 child: Column(
                   children: [
-                    TextStatefulWidget(
-                      fontSize: 30,
-                      textData: widget.textData2,
-                      currentTaskIndex: TaskController.currentTaskIndex >= TaskController.length ? -1 : TaskController.currentTaskIndex,
-                    ), // TextStatefulWidget над изображением
-
-                    ImageWidget(
-                      currentTaskIndex: TaskController.currentTaskIndex >= TaskController.length ? -1 : TaskController.currentTaskIndex,
-                    )
-
+                    TextStatefulWidget(fontSize: 30, textData: widget.textData2, currentTaskIndex: TaskController.currentTaskIndex), // TextStatefulWidget над изображением
+                    ImageWidget(currentTaskIndex: TaskController.currentTaskIndex)
                   ],
                 ),
               ),
@@ -170,7 +175,63 @@ class _PrevNextWidgetState extends State<PrevNextWidget> {
   }
 }
 
+class AutoScrollText extends StatefulWidget {
+  final String text;
+  final TextStyle textStyle;
+  final double scrollSpeed;
 
+  const AutoScrollText({
+    Key? key,
+    required this.text,
+    this.textStyle = const TextStyle(fontSize: 16.0),
+    this.scrollSpeed = 50.0, // Скорость прокрутки по умолчанию (пиксели в секунду)
+  }) : super(key: key);
+
+  @override
+  _AutoScrollTextState createState() => _AutoScrollTextState();
+}
+
+class _AutoScrollTextState extends State<AutoScrollText> {
+  late ScrollController _controller;
+  late double _scrollPosition;
+  late Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = ScrollController();
+    _scrollPosition = 0.0;
+
+    // Создаем таймер для автоматической прокрутки текста
+    _timer = Timer.periodic(Duration(milliseconds: 50), (timer) {
+      setState(() {
+        _scrollPosition += widget.scrollSpeed / 20.0; // Увеличиваем позицию прокрутки на основе скорости
+        if (_scrollPosition > _controller.position.maxScrollExtent) {
+          _scrollPosition = _controller.position.minScrollExtent;
+        }
+        _controller.jumpTo(_scrollPosition); // Прокручиваем текст до новой позиции
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel(); // Отменяем таймер при удалении виджета
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal, // Горизонтальная прокрутка
+      controller: _controller,
+      child: Text(
+        widget.text,
+        style: widget.textStyle,
+      ),
+    );
+  }
+}
 
 class TextStatefulWidget extends StatefulWidget {
   static _TextStatefulWidgetState? _textStatefulWidgetState;
@@ -310,10 +371,12 @@ class _NextWidgetState extends State<NextWidget> {
                 );
               });
             }
-            TaskController.countValue();
-            ImageWidget._imageWidgetState?.updateImage();
-            TextStatefulWidget._textStatefulWidgetState?.updateText();
-            ProgressBarWidget._progressBarWidgetState?.updateProgressBar();
+            if (TaskController.currentTaskIndex <= TaskController.length -1) {
+              TaskController.countValue();
+              ImageWidget._imageWidgetState?.updateImage();
+              TextStatefulWidget._textStatefulWidgetState?.updateText();
+              ProgressBarWidget._progressBarWidgetState?.updateProgressBar();
+            }
           });
         },
         shape: CircleBorder(),

@@ -10,6 +10,7 @@ import 'models/object_model.dart';
 import 'package:EducationalApp/services/db.dart';
 import 'my_home_page.dart';
 import 'choice_category_page.dart';
+import 'my_app.dart';
 
 class ResultPage extends StatefulWidget {
   @override
@@ -108,9 +109,8 @@ class _ResultPageState extends State<ResultPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(height: 100),
-          TextChoiceStatefulWidget(fontSize: 30,
-              textData: pageData['Select category']['Text_category']['params']['Is visible']),
+          SizedBox(height: 200),
+
           SizedBox(height: 40),
           // Пустое пространство для отступа
           Center(
@@ -118,7 +118,7 @@ class _ResultPageState extends State<ResultPage> {
               onPressed: () {
                 // Обработчик нажатия кнопки
               },
-              ChoiceData: pageData['Select category']['choise_image']['params']['Image'],
+              ChoiceData: pageData['Result page']['result_image']['params']['Image'],
             ),
           ),
           SizedBox(height: 20),
@@ -128,24 +128,26 @@ class _ResultPageState extends State<ResultPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.done_all, color: Colors.green, size: 100),
                 // Иконка завершения
-                Text("Поздравляю! Ты прошёл данный тренажёр!",
-                    style: TextStyle(fontSize: 24, color: Colors.green)),
-                // Текстовая надпись
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: TextResultStatefulWidget(fontSize: 30,
+                      textData: pageData['Result page']['Text_result']['params']['Is visible']),
+                ),
+                // Текстовая надпись с отступами по краям
               ],
             ),
           ),
+          SizedBox(height: 20),
           // Добавляем кнопку закрытия страницы
-          MaterialButton(
+          ChoiceButton(
             onPressed: () {
-              // Переход на страницу ChoiceCategoryPage
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ChoiceCategoryPage()),
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyApp()),
               );
             },
-            child: Text("Закрыть"),
+            ChoiceData: pageData['Result page']['close_image']['params']['Image'],
           ),
         ],
       ),
@@ -153,33 +155,58 @@ class _ResultPageState extends State<ResultPage> {
   }
 }
 
-class TextChoiceStatefulWidget extends StatefulWidget {
-  static _TextChoiceStatefulWidgetState? _textChoiceStatefulWidgetState;
+class TextResultStatefulWidget extends StatefulWidget {
+  static _TextResultStatefulWidgetState? _textResultStatefulWidgetState;
   final double fontSize; // Поле для размера текста
   final Map<String, dynamic>? textData;
 
-  TextChoiceStatefulWidget({required this.fontSize, required this.textData});
+  TextResultStatefulWidget({required this.fontSize, required this.textData});
 
   @override
-  _TextChoiceStatefulWidgetState createState() {
-    _textChoiceStatefulWidgetState = _TextChoiceStatefulWidgetState();
-    return _textChoiceStatefulWidgetState!;
+  _TextResultStatefulWidgetState createState() {
+    _textResultStatefulWidgetState = _TextResultStatefulWidgetState();
+    return _textResultStatefulWidgetState!;
   }
 }
 
-class _TextChoiceStatefulWidgetState extends State<TextChoiceStatefulWidget> {
+class _TextResultStatefulWidgetState extends State<TextResultStatefulWidget> {
   @override
   Widget build(BuildContext context) {
     bool isVisible = widget.textData?['value'] ?? false;
 
     return Visibility(
       visible: isVisible, // Используем параметр visible для управления видимостью
-      child: Text(
-        'Результаты',
-        style: TextStyle(
-          fontSize: widget.fontSize,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 24.0),
+        child: Center(
+          child: AnimatedContainer(
+            duration: Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+            decoration: BoxDecoration(
+              color: Colors.blueGrey.shade100, // Используем более приятный цвет
+              borderRadius: BorderRadius.circular(20.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: Offset(0, 3), // изменение тени вниз
+                ),
+              ],
+            ),
+            padding: EdgeInsets.all(16.0),
+            child: Text(
+              'Поздравляю! Ты прошёл тренажёр!',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: widget.fontSize,
+                color: Colors.black87,
+                fontWeight: FontWeight.bold, // Добавим жирный шрифт для выделения текста
+              ),
+            ),
+          ),
         ),
-      ),
+      )
     );
   }
   void updateText() {

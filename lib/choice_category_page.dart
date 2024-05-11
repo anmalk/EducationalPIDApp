@@ -91,7 +91,40 @@ class _ChoiceCategoryPageState extends State<ChoiceCategoryPage> {
     return Scaffold(
       body: jsonData == null || jsonData.isEmpty
           ? Center(
-        child: CircularProgressIndicator(),
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.grey.shade200,
+              borderRadius: BorderRadius.circular(10.0),
+              border: Border.all(
+                color: Colors.grey.shade400,
+                width: 1.0,
+              ),
+            ),
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  size: 64.0,
+                  color: Colors.red,
+                ),
+                SizedBox(height: 16.0),
+                Text(
+                  'Пожалуйста, помогите пользователю авторизоваться под его аккаунтом для загрузки интерфейса, настроенного под него или проверьте интернет-соединение!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    color: Colors.black87,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       )
           : buildChoicePage(jsonData['item']['settings']?['pages']),
     );
@@ -146,7 +179,7 @@ Widget buildChoicePage(Map<String, dynamic>? pageData) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => MyHomePage(name: data['name'], name_false_category: data['name_false_category']),
+                          builder: (context) => MyHomePage(name: data['name']),
                         ),
                       );
                     },

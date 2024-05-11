@@ -35,7 +35,7 @@ class _NavigationExampleState extends State<NavigationExample> {
     return Scaffold(
 
       bottomNavigationBar: NavigationBar(
-        height: 50, // Установите желаемую высоту здесь
+        height: 70, // Установите желаемую высоту здесь
         onDestinationSelected: (int index) {
           setState(() {
             currentPageIndex = index;

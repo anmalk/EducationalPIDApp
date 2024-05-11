@@ -10,25 +10,41 @@ class TaskController {
   static int length = 0;
   static Category? category;
   static int score = 0;
+  static User? user;
 
-  static Future<void> loadTasksFromFirestore(String name, String name_false_category) async {
+  static Future<void> loadTasksFromFirestore(String nameCategory) async {
     try {
+      // Получаем документы из коллекции tasks, где name_category равно заданному значению
       QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance
-          .collection('objects')
-          .where('category', whereIn: [name, name_false_category])
+          .collection('tasks')
+          .where('name_category', isEqualTo: nameCategory)
           .get();
 
       tasks.clear(); // Очищаем список перед загрузкой новых данных
 
-      querySnapshot.docs.forEach((doc) {
-        Object object = Object(
-          id_objects: doc.id ?? '',
-          name: doc['name'] ?? '',
-          name_categories: doc['category'] ?? '',
-          url: doc['url'] ?? '',
-        );
-        tasks.add(object);
-      });
+      // Для каждого документа в полученных результатах
+      for (QueryDocumentSnapshot<Map<String, dynamic>> doc in querySnapshot.docs) {
+        // Получаем массив id_objects из документа
+        List<dynamic> idObjects = doc['id_objects'];
+
+        // Загружаем объекты из коллекции objects по id_objects
+        for (var id in idObjects) {
+          DocumentSnapshot<Map<String, dynamic>> objectDoc = await FirebaseFirestore.instance
+              .collection('objects')
+              .doc(id)
+              .get();
+
+          if (objectDoc.exists) {
+            Object object = Object(
+              id_objects: objectDoc.id ?? '',
+              name: objectDoc['name'] ?? '',
+              name_categories: objectDoc['category'] ?? '',
+              url: objectDoc['url'] ?? '',
+            );
+            tasks.add(object);
+          }
+        }
+      }
 
       print('Tasks loaded successfully.');
     } catch (e) {
