@@ -27,11 +27,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
+    TaskController.currentTaskIndex = 0;
+    TaskController.tasks.clear();
+    TaskController.length = 0;
+    TaskController.category = null;
+    TaskController.currentValue = 0;
+
     super.initState();
     print('Выбранная категория: ${widget.name}');
     DatabaseService.initFirebase();
     jsonData = {};
     fetchData();
+
+
 
 
     // Вызываем метод загрузки задач из Firestore
@@ -41,14 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
     print(TaskController.currentTaskIndex);
-    // print('Задачи загружены:');
-    // for (Object task in TaskController.tasks) {
-    //   print('ID: ${task.id_objects}');
-    //   print('Name: ${task.name}');
-    //   print('Category Name: ${task.name_categories}');
-    //   print('URL: ${task.url}');
-    //   print('--------------------');
-    // }
+
     DatabaseService.getCategoryData(widget.name).then((category) {
       setState(() {
         TaskController.category = category;

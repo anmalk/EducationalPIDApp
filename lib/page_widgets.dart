@@ -122,12 +122,19 @@ class _PrevNextWidgetState extends State<PrevNextWidget> {
               Center(
                 child: Column(
                   children: [
-                    TextStatefulWidget(fontSize: 30, textData: widget.textData2, currentTaskIndex: TaskController.currentTaskIndex), // TextStatefulWidget над изображением
-                    ImageWidget(currentTaskIndex: TaskController.currentTaskIndex)
+                    TextStatefulWidget(
+                      fontSize: 30,
+                      textData: widget.textData2,
+                      currentTaskIndex: TaskController.currentTaskIndex >= TaskController.length ? -1 : TaskController.currentTaskIndex,
+                    ), // TextStatefulWidget над изображением
+
+                    ImageWidget(
+                      currentTaskIndex: TaskController.currentTaskIndex >= TaskController.length ? -1 : TaskController.currentTaskIndex,
+                    )
+
                   ],
                 ),
               ),
-
               SizedBox(height: 1), // Отступ между изображением и кнопками категорий
               Row(
                 mainAxisAlignment: MainAxisAlignment.center, // Выравнивание кнопок по центру
@@ -408,7 +415,8 @@ class _ProgressBarWidgetState extends State<ProgressBarWidget> {
   }
 
   void updateProgressBar() {
-    setState(() {});
+    setState(() {
+    });
     print(TaskController.currentValue);
     print(TaskController.tasks[TaskController.currentTaskIndex].id_objects);
     print(TaskController.tasks[TaskController.currentTaskIndex].name);
