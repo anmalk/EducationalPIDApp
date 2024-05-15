@@ -2,6 +2,18 @@ import 'package:EducationalApp/models/object_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+class Task {
+  String idCategory;
+  List<String> idObjectsDiffCategories;
+  List<String> idObjectsOneCategory;
+
+  Task({
+    required this.idCategory,
+    required this.idObjectsDiffCategories,
+    required this.idObjectsOneCategory,
+  });
+}
+
 class TaskController {
 
   static List<Object> tasks = [];

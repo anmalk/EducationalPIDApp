@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:EducationalApp/tasks_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -28,9 +29,6 @@ class _ChoiceCategoryPageState extends State<ChoiceCategoryPage> {
     jsonData = {};
     fetchData();
 
-
-
-
     print(TaskController.currentTaskIndex);
     print('Задачи загружены:');
     for (Object task in TaskController.tasks) {
@@ -40,9 +38,7 @@ class _ChoiceCategoryPageState extends State<ChoiceCategoryPage> {
       print('URL: ${task.url}');
       print('--------------------');
     }
-
   }
-
 
   Future<void> fetchData() async {
     try {
@@ -126,12 +122,12 @@ class _ChoiceCategoryPageState extends State<ChoiceCategoryPage> {
           ),
         ),
       )
-          : buildChoicePage(jsonData['item']['settings']?['pages']),
+          : buildChoicePage(context, jsonData['item']['settings']?['pages']),
     );
   }
 }
 
-Widget buildChoicePage(Map<String, dynamic>? pageData) {
+Widget buildChoicePage(BuildContext context, Map<String, dynamic>? pageData) {
   if (pageData == null || pageData.isEmpty) {
     return Center(
       child: Text('Page data is empty.'),
@@ -144,8 +140,9 @@ Widget buildChoicePage(Map<String, dynamic>? pageData) {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(height: 100),
-        TextChoiceStatefulWidget(fontSize: 30, textData: pageData['Select category']['Text_category']['params']['Is visible']),
-        SizedBox(height: 40), // Пустое пространство для отступа
+        TextChoiceStatefulWidget(textValue: 'Выбери категорию', fontSize: 30,
+            textData: pageData['Select category']['Text_category']['params']['Is visible']),
+        SizedBox(height: 40),
         Center(
           child: ChoiceButton(
             onPressed: () {
@@ -154,26 +151,28 @@ Widget buildChoicePage(Map<String, dynamic>? pageData) {
             ChoiceData: pageData['Select category']['choise_image']['params']['Image'],
           ),
         ),
-        SizedBox(height: 20), // Пустое пространство между кнопкой и карточками
+        SizedBox(height: 20),
         FutureBuilder<QuerySnapshot>(
           future: FirebaseFirestore.instance.collection('categories').get(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator(); // Отображаем индикатор загрузки, пока данные загружаются
+              return CircularProgressIndicator();
             }
             if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}'); // Отображаем сообщение об ошибке, если произошла ошибка при загрузке данных
+              return Text('Error: ${snapshot.error}');
             }
             final List<DocumentSnapshot> documents = snapshot.data!.docs;
             return ListView.builder(
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(), // Отключаем возможность прокрутки ListView
+              physics: NeverScrollableScrollPhysics(),
               itemCount: documents.length,
               itemBuilder: (context, index) {
-                final Map<String, dynamic> data = documents[index].data() as Map<String, dynamic>;
+                final Map<String, dynamic> data = documents[index]
+                    .data() as Map<String, dynamic>;
                 return Card(
                   child: ListTile(
-                    title: Text(data['name']),
+                    title: TextChoiceStatefulWidget(textValue: data['name'], fontSize: 28,
+                      textData: pageData['Select category']['Text_card']['params']['Is visible'],),
                     subtitle: Image.network(data['url']),
                     onTap: () {
                       Navigator.push(
@@ -189,6 +188,26 @@ Widget buildChoicePage(Map<String, dynamic>? pageData) {
             );
           },
         ),
+        SizedBox(height: 20), // Пустое пространство после ListView.builder
+        // Ваш новый виджет здесь
+        TextChoiceStatefulWidget(textValue: 'Попробуй новый тренажёр!', fontSize: 30,
+            textData: pageData['Select category']['Text_tasks']['params']['Is visible']),
+        SizedBox(height: 40),
+        Center(
+          child: ChoiceButton(
+            onPressed: () {
+              // Обработчик нажатия кнопки
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TasksPage(name: 'Задача'),
+                ),
+              );
+            },
+            ChoiceData: pageData['Select category']['task_image']['params']['Image'],
+          ),
+        ),
+        SizedBox(height: 20),
       ],
     ),
   );
@@ -199,8 +218,9 @@ class TextChoiceStatefulWidget extends StatefulWidget {
   static _TextChoiceStatefulWidgetState? _textChoiceStatefulWidgetState;
   final double fontSize; // Поле для размера текста
   final Map<String, dynamic>? textData;
+  final String textValue;
 
-  TextChoiceStatefulWidget({required this.fontSize, required this.textData});
+  TextChoiceStatefulWidget({required this.fontSize, required this.textData, required this.textValue});
 
   @override
   _TextChoiceStatefulWidgetState createState() {
@@ -213,11 +233,11 @@ class _TextChoiceStatefulWidgetState extends State<TextChoiceStatefulWidget> {
   @override
   Widget build(BuildContext context) {
     bool isVisible = widget.textData?['value'] ?? false;
-
+    String textValue = widget.textValue;
     return Visibility(
       visible: isVisible, // Используем параметр visible для управления видимостью
       child: Text(
-        'Выбери категорию',
+        textValue,
         style: TextStyle(
           fontSize: widget.fontSize,
         ),

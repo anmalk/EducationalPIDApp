@@ -7,14 +7,14 @@ import 'package:EducationalApp/models/task_controller.dart';
 
 class DatabaseService {
   // Метод для загрузки данных из Firestore и сохранения их в список объектов
-  static Future<List<Object>> getObjects(String name, String name_false_category) async {
+  static Future<List<Object>> getObjects(String name) async {
     List<Object> objects = [];
 
     try {
       // Получаем доступ к коллекции объектов в Firestore
       QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance
           .collection('objects')
-          .where('category', whereIn: [name, name_false_category])
+          .where('category', whereIn: [name])
           .get();
 
       // Перебираем все документы в коллекции и добавляем их в список объектов
