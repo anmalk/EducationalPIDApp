@@ -31,11 +31,9 @@ class _NavigationExampleState extends State<NavigationExample> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
     return Scaffold(
-
       bottomNavigationBar: NavigationBar(
-        height: 66, // Установите желаемую высоту здесь
+        height: 56, // Устанавливаем желаемую высоту
         onDestinationSelected: (int index) {
           setState(() {
             currentPageIndex = index;
@@ -43,24 +41,27 @@ class _NavigationExampleState extends State<NavigationExample> {
         },
         indicatorColor: Colors.amber,
         selectedIndex: currentPageIndex,
-        destinations: const <Widget>[
+        destinations: <Widget>[
           NavigationDestination(
-            icon: Badge(child: Icon(Icons.category)),
-            label: '',
+            icon: Padding(
+              padding: const EdgeInsets.only(top: 4.0), // Добавляем отступ сверху
+              child: Badge(child: Icon(Icons.category, size: 40)), // Увеличиваем размер иконки
+            ),
+            label: '', // Убираем текстовую метку
           ),
           NavigationDestination(
-            icon: Badge(child: Icon(Icons.account_circle)),
-            label: '',
+            icon: Padding(
+              padding: const EdgeInsets.only(top: 4.0), // Добавляем отступ сверху
+              child: Badge(child: Icon(Icons.account_circle, size: 40)), // Увеличиваем размер иконки
+            ),
+            label: '', // Убираем текстовую метку
           ),
-
         ],
       ),
       body: <Widget>[
-        //MyHomePage(name: '!!!!!!!!!!!!', name_false_category: 'dghdfghdfg',), // Ваш виджет для домашней страницы
-        ChoiceCategoryPage(),
+        ChoiceCategoryPage(), // Ваш виджет для домашней страницы
         AutorizationPage(), // Ваш виджет для страницы авторизации
       ][currentPageIndex],
     );
   }
 }
-
