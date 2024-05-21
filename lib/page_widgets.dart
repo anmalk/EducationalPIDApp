@@ -621,12 +621,24 @@ void showResultDialog(BuildContext context, bool result, String imageTrue, Strin
             onTap: () {
               Navigator.of(context).pop();
               if(result) {
-                TaskController
-                    .showNextImage(); // Вызов функции showPrevImage при нажатии на кнопку return
-                ImageWidget._imageWidgetState?.updateImage();
-                TaskController.countValue();
-                TextStatefulWidget._textStatefulWidgetState?.updateText();
-                ProgressBarWidget._progressBarWidgetState?.updateProgressBar();
+                TaskController.showNextImage();
+                print(TaskController.currentTaskIndex);
+                print(TaskController.length);
+                if (TaskController.currentTaskIndex == TaskController.length) {
+
+                    // Переход на страницу ResultPage
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ResultPage()),
+                    );
+
+                }
+                if (TaskController.currentTaskIndex <= TaskController.length -1) {
+                  TaskController.countValue();
+                  ImageWidget._imageWidgetState?.updateImage();
+                  TextStatefulWidget._textStatefulWidgetState?.updateText();
+                  ProgressBarWidget._progressBarWidgetState?.updateProgressBar();
+                }
               }
             },
             child: Image.network(
