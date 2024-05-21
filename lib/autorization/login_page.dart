@@ -141,7 +141,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login Page'),
+        title: Text('Страница авторизации'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -165,7 +165,7 @@ class _LoginPageState extends State<LoginPage> {
         children: [
           SizedBox(height: 16.0),
           Text(
-            'Selected Pictograms for ${isLoginSelected ? 'Login' : 'Password'}:',
+            'Выбранные пиктограммы для ${isLoginSelected ? 'логина' : 'пароля'}:',
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 8.0),
@@ -185,7 +185,7 @@ class _LoginPageState extends State<LoginPage> {
           Expanded(
             child: jsonData.isEmpty
                 ? Center(
-              child: const Text('This is the Login Page'),
+              child: const Text('Это страница авторизации'),
             )
                 : buildPictogramList(), // вызываем метод внутри класса
           ),
@@ -200,7 +200,7 @@ class _LoginPageState extends State<LoginPage> {
                 });
               },
               child: Text(
-                  isLoginSelected ? 'Select Password Pictograms' : 'Select Login Pictograms'),
+                  isLoginSelected ? 'Введи пароль' : 'Введи логин'),
             ),
           ),
           SizedBox(height: 16.0),
@@ -214,7 +214,7 @@ class _LoginPageState extends State<LoginPage> {
               style: ElevatedButton.styleFrom(
                 // Remove 'primary' as it is not a valid parameter
               ),
-              child: Text('Login'),
+              child: Text('Авторизоваться'),
             ),
           ),
         ],
@@ -274,6 +274,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void updateSelectedValues() {
     setState(() {
+
       if (isLoginSelected) {
         selectedLoginValues =
             selectedLoginPictograms.map((pictogram) => pictogram['value']?.toString() ?? '').join('');
@@ -301,7 +302,7 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             Image.network('https://${pictogram['image']?.toString() ?? ''}', height: 50, width: 50),
             SizedBox(height: 4.0),
-            Text(pictogram['value']?.toString() ?? ''),
+            //Text(pictogram['value']?.toString() ?? ''),
           ],
         ),
       ),

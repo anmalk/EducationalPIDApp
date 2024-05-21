@@ -35,7 +35,7 @@ class _NavigationExampleState extends State<NavigationExample> {
     return Scaffold(
 
       bottomNavigationBar: NavigationBar(
-        height: 70, // Установите желаемую высоту здесь
+        height: 66, // Установите желаемую высоту здесь
         onDestinationSelected: (int index) {
           setState(() {
             currentPageIndex = index;
@@ -46,11 +46,11 @@ class _NavigationExampleState extends State<NavigationExample> {
         destinations: const <Widget>[
           NavigationDestination(
             icon: Badge(child: Icon(Icons.category)),
-            label: 'Choice Category',
+            label: '',
           ),
           NavigationDestination(
             icon: Badge(child: Icon(Icons.account_circle)),
-            label: 'Authorization',
+            label: '',
           ),
 
         ],

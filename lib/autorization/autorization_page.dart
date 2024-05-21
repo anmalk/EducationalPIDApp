@@ -16,7 +16,7 @@ class AutorizationPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Welcome to Your App!',
+              'Добро пожаловать в приложение!',
               style: TextStyle(fontSize: 24),
             ),
             SizedBox(height: 20),
@@ -25,7 +25,7 @@ class AutorizationPage extends StatelessWidget {
                 // Навигация к странице авторизации
                 Navigator.pushNamed(context, '/login'); // Укажите нужный маршрут
               },
-              child: Text('Login'),
+              child: Text('Войти в аккаунт'),
             ),
             SizedBox(height: 20),
             ElevatedButton(
@@ -37,7 +37,7 @@ class AutorizationPage extends StatelessWidget {
                   context,
                   MaterialPageRoute(builder: (context) => LoginPage()),
                 );              },
-              child: Text('Logout'),
+              child: Text('Выйти из аккаунта'),
             ),
           ],
         ),

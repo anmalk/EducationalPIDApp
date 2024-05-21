@@ -30,15 +30,15 @@ class _ResultPageState extends State<ResultPage> {
     jsonData = {};
     fetchData();
 
-    print(TaskController.currentTaskIndex);
-    print('Задачи загружены:');
-    for (Object task in TaskController.tasks) {
-      print('ID: ${task.id_objects}');
-      print('Name: ${task.name}');
-      print('Category Name: ${task.name_categories}');
-      print('URL: ${task.url}');
-      print('--------------------');
-    }
+    // print(TaskController.currentTaskIndex);
+    // print('Задачи загружены:');
+    // for (Object task in TaskController.tasks) {
+    //   print('ID: ${task.id_objects}');
+    //   print('Name: ${task.name}');
+    //   print('Category Name: ${task.name_categories}');
+    //   print('URL: ${task.url}');
+    //   print('--------------------');
+    // }
   }
 
   Future<void> fetchData() async {
@@ -88,7 +88,7 @@ class _ResultPageState extends State<ResultPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(jsonData);
+    //print(jsonData);
     return Scaffold(
       body: jsonData == null || jsonData.isEmpty
           ? Center(
@@ -231,9 +231,6 @@ class _ChoiceButtonState extends State<ChoiceButton> {
   @override
   Widget build(BuildContext context) {
     String helpImageUrl = widget.ChoiceData?['value'];
-    print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-    print(helpImageUrl);
-    print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
     return GestureDetector(
       onTapDown: (_) {
         setState(() {

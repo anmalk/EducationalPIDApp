@@ -47,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
       TaskController.length = TaskController.tasks.length;
     });
 
-    print(TaskController.currentTaskIndex);
+    //print(TaskController.currentTaskIndex);
 
     DatabaseService.getCategoryData(widget.name).then((category) {
       setState(() {

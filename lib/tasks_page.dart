@@ -48,41 +48,41 @@ class _TasksPageState extends State<TasksPage> {
             Object(id_objects: '1', name: 'Object 1', name_categories: 'category1', url: 'https://example.com/image1.jpg'): {
               'id_objects': '1',
               'name': 'Object 1',
-              'id_categories': 'category1',
+              'name_categories': 'category1',
               'url': 'https://img.povar.ru/mobile/8b/4e/89/f5/uzbekskii_plov-4860.jpg'
             },
-            Object(id_objects: '2', name: 'Object 2', name_categories: 'category2', url: 'https://example.com/image2.jpg'): {
+            Object(id_objects: '2', name: 'Object 2', name_categories: 'category1', url: 'https://example.com/image2.jpg'): {
               'id_objects': '2',
               'name': 'Object 2',
-              'id_categories': 'category2',
+              'name_categories': 'category1',
               'url': 'https://static.insales-cdn.com/images/products/1/2038/401188854/kvarcevii_pesok.jpg'
             },
-            Object(id_objects: '3', name: 'Object 3', name_categories: 'category3', url: 'https://example.com/image2.jpg'): {
+            Object(id_objects: '3', name: 'Object 3', name_categories: 'category1', url: 'https://example.com/image2.jpg'): {
               'id_objects': '3',
               'name': 'Object 3',
-              'id_categories': 'category3',
+              'name_categories': 'category1',
               'url': 'https://www.tg-stroy.ru/wp-content/uploads/2021/08/Rectangle-25-2-570x360.jpg'
             },
           },
         ],
         objectsDataOneCategory: [
           {
-            Object(id_objects: '4', name: 'Object 4', name_categories: 'category1', url: 'https://upload.wikimedia.org/wikipedia/commons/0/0c/Two-parts_stone_nikogda_takih_ne_videl_vot.JPG'): {
+            Object(id_objects: '4', name: 'Object 4', name_categories: 'category2', url: 'https://upload.wikimedia.org/wikipedia/commons/0/0c/Two-parts_stone_nikogda_takih_ne_videl_vot.JPG'): {
               'id_objects': '4',
               'name': 'Object 4',
-              'id_categories': 'category1',
+              'name_categories': 'category2',
               'url': 'https://upload.wikimedia.org/wikipedia/commons/0/0c/Two-parts_stone_nikogda_takih_ne_videl_vot.JPG'
             },
             Object(id_objects: '5', name: 'Object 5', name_categories: 'category1', url: 'https://aif-s3.aif.ru/images/019/734/a3e931c399f2ddb1e74ccdb2bda0b2e7.jpg'): {
               'id_objects': '5',
               'name': 'Object 5',
-              'id_categories': 'category1',
+              'name_categories': 'category1',
               'url': 'https://aif-s3.aif.ru/images/019/734/a3e931c399f2ddb1e74ccdb2bda0b2e7.jpg'
             },
-            Object(id_objects: '6', name: 'Object 6', name_categories: 'category1', url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYotOoL8JNtaChgVqbQDumZEuf1lhFO5Qk4UxHoFFRAw&s'): {
+            Object(id_objects: '6', name: 'Object 6', name_categories: 'category2', url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYotOoL8JNtaChgVqbQDumZEuf1lhFO5Qk4UxHoFFRAw&s'): {
               'id_objects': '6',
               'name': 'Object 6',
-              'id_categories': 'category1',
+              'name_categories': 'category2',
               'url': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYotOoL8JNtaChgVqbQDumZEuf1lhFO5Qk4UxHoFFRAw&s'
             },
           },
@@ -161,7 +161,7 @@ class _TasksPageState extends State<TasksPage> {
           ? Center(
         child: CircularProgressIndicator(),
       )
-          : buildTasksPage(jsonData['item']['settings']?['pages']),
+          : buildTasksPage(context, jsonData['item']['settings']?['pages']),
     );
   }
 }

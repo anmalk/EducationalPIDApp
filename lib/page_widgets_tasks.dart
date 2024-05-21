@@ -13,7 +13,7 @@ import 'tasks_page.dart';
 import 'page_widgets.dart';
 
 
-Widget buildTasksPage(Map<String, dynamic>? pageData) {
+Widget buildTasksPage(BuildContext context, Map<String, dynamic>? pageData) {
   if (pageData == null || pageData.isEmpty) {
     return Center(
       child: Text('Page data is empty.'),
@@ -25,7 +25,7 @@ Widget buildTasksPage(Map<String, dynamic>? pageData) {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(height: 20),
+        SizedBox(height: 5),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -35,57 +35,126 @@ Widget buildTasksPage(Map<String, dynamic>? pageData) {
               helpImageUrlData: pageData['Task page']['help_image'],), // Ваша кнопка HelpButton
           ],
         ),
-        SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Image.network(
-              TaskController_more.tasks[0].objectsDataDiffCategories[0].values.elementAt(0)['url'],
-              width: 190, // Задайте ширину изображения
-              height: 190, // Задайте высоту изображения
+        SizedBox(height: 0),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10), // Задайте радиус для создания закругленных углов
+            border: Border.all(
+              color: Colors.black, // Задайте цвет рамки
+              width: 2, // Задайте толщину рамки
             ),
-            Image.network(
-              TaskController_more.tasks[0].objectsDataDiffCategories[0].values.elementAt(1)['url'],
-              width: 190, // Задайте ширину изображения
-              height: 190, // Задайте высоту изображения
+          ),
+          child: Container(
+
+            padding: EdgeInsets.all(10), // Отступы для контейнера с изображениями
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Image.network(
+                      TaskController_more.tasks[0].objectsDataDiffCategories[0].values.elementAt(0)['url'],
+                      width: 190,
+                      height: 190,
+                    ),
+                    Image.network(
+                      TaskController_more.tasks[0].objectsDataDiffCategories[0].values.elementAt(1)['url'],
+                      width: 190,
+                      height: 190,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Image.network(
+                      TaskController_more.tasks[0].objectsDataDiffCategories[0].values.elementAt(2)['url'],
+                      width: 190,
+                      height: 190,
+                    ),
+                    Image.network(
+                      'https://img.lovepik.com/element/40117/2354.png_860.png',
+                      width: 150,
+                      height: 150,
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-        SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Image.network(
-              TaskController_more.tasks[0].objectsDataDiffCategories[0].values.elementAt(2)['url'],
-              width: 190, // Задайте ширину изображения
-              height: 190, // Задайте высоту изображения
-            ),
-            Image.network(
-              'https://img.lovepik.com/element/40117/2354.png_860.png',
-              width: 190, // Задайте ширину изображения
-              height: 190, // Задайте высоту изображения
-            ),
-          ],
-        ),
-        SizedBox(height: 70),
+        SizedBox(height: 10),
         Wrap(
           alignment: WrapAlignment.center,
           spacing: 8.0,
           children: [
-            Image.network(
-              TaskController_more.tasks[0].objectsDataOneCategory[0].values.elementAt(0)['url'],
-              width: 120, // Задайте ширину изображения
-              height: 120, // Задайте высоту изображения
+            ElevatedButton(
+              onPressed: () {
+                //print(TaskController_more.tasks[0].objectsDataDiffCategories[0].values.elementAt(2)['name_category']);
+                //print(TaskController_more.tasks[0].objectsDataOneCategory[0].values.elementAt(1)['name_category']);
+
+                if(TaskController_more.tasks[0].objectsDataDiffCategories[0].values.elementAt(0)['name_category'] != TaskController_more.tasks[0].objectsDataOneCategory[0].values.elementAt(2)['name_category'])
+                {
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ResultPage()),
+                  );
+                }
+              },
+              child: Image.network(
+                TaskController_more.tasks[0].objectsDataOneCategory[0].values.elementAt(0)['url'],
+                width: 150,
+                height: 150,
+              ),
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10), // Задайте радиус для создания закругленных углов кнопки
+                ),
+              ),
             ),
-            Image.network(
-              TaskController_more.tasks[0].objectsDataOneCategory[0].values.elementAt(1)['url'],
-              width: 120, // Задайте ширину изображения
-              height: 120, // Задайте высоту изображения
+            ElevatedButton(
+              onPressed: () {
+                if(TaskController_more.tasks[0].objectsDataDiffCategories[0].values.elementAt(1)['name_category'] == TaskController_more.tasks[0].objectsDataOneCategory[0].values.elementAt(2)['name_category'])
+                {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ResultPage()),
+                  );
+                }
+              },
+              child: Image.network(
+                TaskController_more.tasks[0].objectsDataOneCategory[0].values.elementAt(1)['url'],
+                width: 150,
+                height: 150,
+              ),
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10), // Задайте радиус для создания закругленных углов кнопки
+                ),
+              ),
             ),
-            Image.network(
-              TaskController_more.tasks[0].objectsDataOneCategory[0].values.elementAt(2)['url'],
-              width: 120, // Задайте ширину изображения
-              height: 120, // Задайте высоту изображения
+            ElevatedButton(
+              onPressed: () {
+                if(TaskController_more.tasks[0].objectsDataDiffCategories[0].values.elementAt(2)['name_category'] != TaskController_more.tasks[0].objectsDataOneCategory[0].values.elementAt(2)['name_category'])
+                  {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ResultPage()),
+                    );
+                  }
+              },
+              child: Image.network(
+                TaskController_more.tasks[0].objectsDataOneCategory[0].values.elementAt(2)['url'],
+                width: 150,
+                height: 150,
+              ),
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10), // Задайте радиус для создания закругленных углов кнопки
+                ),
+              ),
             ),
             // Добавьте столько изображений, сколько вам нужно
           ],

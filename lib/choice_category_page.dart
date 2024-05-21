@@ -29,15 +29,15 @@ class _ChoiceCategoryPageState extends State<ChoiceCategoryPage> {
     jsonData = {};
     fetchData();
 
-    print(TaskController.currentTaskIndex);
-    print('Задачи загружены:');
-    for (Object task in TaskController.tasks) {
-      print('ID: ${task.id_objects}');
-      print('Name: ${task.name}');
-      print('Category Name: ${task.name_categories}');
-      print('URL: ${task.url}');
-      print('--------------------');
-    }
+    // print(TaskController.currentTaskIndex);
+    // print('Задачи загружены:');
+    // for (Object task in TaskController.tasks) {
+    //   print('ID: ${task.id_objects}');
+    //   print('Name: ${task.name}');
+    //   print('Category Name: ${task.name_categories}');
+    //   print('URL: ${task.url}');
+    //   print('--------------------');
+    // }
   }
 
   Future<void> fetchData() async {
@@ -83,7 +83,7 @@ class _ChoiceCategoryPageState extends State<ChoiceCategoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(jsonData);
+    //print(jsonData);
     return Scaffold(
       body: jsonData == null || jsonData.isEmpty
           ? Center(
@@ -110,7 +110,7 @@ class _ChoiceCategoryPageState extends State<ChoiceCategoryPage> {
                 ),
                 SizedBox(height: 16.0),
                 Text(
-                  'Пожалуйста, помогите пользователю авторизоваться под его аккаунтом для загрузки интерфейса, настроенного под него или проверьте интернет-соединение!',
+                  'Пожалуйста, помогите пользователю авторизоваться под его аккаунтом для загрузки интерфейса, настроенного под него, или проверьте интернет-соединение!',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 18.0,
@@ -266,9 +266,6 @@ class _ChoiceButtonState extends State<ChoiceButton> {
   @override
   Widget build(BuildContext context) {
     String helpImageUrl = widget.ChoiceData?['value'];
-    print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-    print(helpImageUrl);
-    print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
     return GestureDetector(
       onTapDown: (_) {
         setState(() {

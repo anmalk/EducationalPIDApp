@@ -480,13 +480,13 @@ class _ProgressBarWidgetState extends State<ProgressBarWidget> {
   void updateProgressBar() {
     setState(() {
     });
-    print(TaskController.currentValue);
-    print(TaskController.tasks[TaskController.currentTaskIndex].id_objects);
-    print(TaskController.tasks[TaskController.currentTaskIndex].name);
-    print(TaskController.tasks[TaskController.currentTaskIndex].name_categories);
-    print(TaskController.tasks[TaskController.currentTaskIndex].url);
-    print(TaskController.tasks[TaskController.currentTaskIndex].isAnswered);
-    print(TaskController.tasks[TaskController.currentTaskIndex].isTrueAnswer);
+    // print(TaskController.currentValue);
+    // print(TaskController.tasks[TaskController.currentTaskIndex].id_objects);
+    // print(TaskController.tasks[TaskController.currentTaskIndex].name);
+    // print(TaskController.tasks[TaskController.currentTaskIndex].name_categories);
+    // print(TaskController.tasks[TaskController.currentTaskIndex].url);
+    // print(TaskController.tasks[TaskController.currentTaskIndex].isAnswered);
+    // print(TaskController.tasks[TaskController.currentTaskIndex].isTrueAnswer);
 
   }
 }
