@@ -34,14 +34,22 @@ class _TasksPageState extends State<TasksPage> {
     TaskController_more.currentValue = 0;
 
     super.initState();
-    //print('Выбранная категория: ${widget.name}');
-    DatabaseService.initFirebase();
+    // Очищаем данные перед загрузкой новых
+    TaskController_more.tasks.clear();
+
+    // Вызываем метод для получения списка задач
+    TaskController_more.fetchTasks().then((tasks) {
+      // Обновляем состояние, когда данные получены
+      setState(() {
+        TaskController_more.tasks = tasks;
+      });
+    });
+
+
     jsonData = {};
     fetchData();
 
-    TaskController_more.fetchTasks().then((tasks) {
-      TaskController_more.tasks = tasks;
-    });
+
 
 
       print('Длина:');
@@ -109,7 +117,7 @@ class _TasksPageState extends State<TasksPage> {
   Widget build(BuildContext context) {
     return Scaffold(
 
-      body: jsonData == null || jsonData.isEmpty
+      body: jsonData == null || jsonData.isEmpty || TaskController_more.tasks.isEmpty
           ? Center(
         child: CircularProgressIndicator(),
       )

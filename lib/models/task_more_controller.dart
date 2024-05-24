@@ -64,9 +64,7 @@ class TaskController_more {
     currentTaskIndex = (currentTaskIndex + 1);
   }
 
-  static void showPrevTask() {
-    currentTaskIndex = (currentTaskIndex - 1 + length) % length;
-  }
+
   static void countValue(){
     currentValue = (currentTaskIndex/length);
   }
