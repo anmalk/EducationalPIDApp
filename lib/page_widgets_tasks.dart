@@ -31,24 +31,16 @@ class _GamePageState extends State<GamePage> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Game'),
-      ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 20),
-              Text(
-                'Find the matching image',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 20),
+              SizedBox(height: 100),
               Wrap(
                 alignment: WrapAlignment.spaceEvenly,
-                spacing: 10,
+                spacing: 20,
                 runSpacing: 20,
                 children: [
                   for (int i = 0; i < 3; i++)
@@ -56,11 +48,27 @@ class _GamePageState extends State<GamePage> {
                       onTap: () {
                         // Обработка нажатия
                       },
-                      child: ImageWidget(
-                        url: TaskController_more.tasks[TaskController_more.currentTaskIndex].images[i].url,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: ImageWidget(
+                            url: TaskController_more.tasks[TaskController_more.currentTaskIndex].images[i].url,
+                          ),
+                        ),
                       ),
                     ),
-                  SizedBox(width: 20),
                   GestureDetector(
                     onTap: () {
                       // Обработка нажатия
@@ -69,28 +77,28 @@ class _GamePageState extends State<GamePage> {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
-              Text(
-                'Select one of these:',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 20),
+              SizedBox(height: 40),
               Wrap(
                 alignment: WrapAlignment.spaceEvenly,
                 spacing: 100,
                 runSpacing: 20,
                 children: [
                   for (int i = 3; i < 6; i++)
-                    AnimatedImageWidget(
-                      url: TaskController_more.tasks[TaskController_more.currentTaskIndex].images[i].url,
-                      onTap: () {
-                        if (TaskController_more.tasks[TaskController_more.currentTaskIndex].category ==
-                            TaskController_more.tasks[TaskController_more.currentTaskIndex].images[i].category) {
-                          _showCorrectAnimation(context);
-                        } else {
-                          _showIncorrectAnimation(context);
-                        }
-                      },
+                    GestureDetector(
+                      onTapDown: (details) => _handleTapDown(i),
+                      onTapUp: (details) => _handleTapUp(),
+                      onTapCancel: () => _handleTapCancel(),
+                      child: AnimatedImageWidget(
+                        url: TaskController_more.tasks[TaskController_more.currentTaskIndex].images[i].url,
+                        onTap: () {
+                          if (TaskController_more.tasks[TaskController_more.currentTaskIndex].category ==
+                              TaskController_more.tasks[TaskController_more.currentTaskIndex].images[i].category) {
+                            _showCorrectAnimation(context);
+                          } else {
+                            _showIncorrectAnimation(context);
+                          }
+                        },
+                      ),
                     ),
                 ],
               ),
@@ -99,6 +107,26 @@ class _GamePageState extends State<GamePage> {
         ),
       ),
     );
+  }
+
+  double _size = 150.0;
+
+  void _handleTapDown(int index) {
+    setState(() {
+      _size = 120.0;
+    });
+  }
+
+  void _handleTapUp() {
+    setState(() {
+      _size = 150.0;
+    });
+  }
+
+  void _handleTapCancel() {
+    setState(() {
+      _size = 150.0;
+    });
   }
 
   void _showCorrectAnimation(BuildContext context) {
@@ -113,15 +141,12 @@ class _GamePageState extends State<GamePage> {
               onPressed: () {
                 Navigator.of(context).pop();
                 TaskController_more.showNextTask();
-                print(TaskController_more.currentTaskIndex);
-                print(TaskController_more.length);
                 if (TaskController_more.currentTaskIndex == TaskController_more.tasks.length) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => ResultPage()),
                   );
-                }
-                if (TaskController_more.currentTaskIndex <= TaskController_more.tasks.length - 1) {
+                } else {
                   TaskController_more.countValue();
                   setState(() {}); // Обновляем состояние страницы
                 }

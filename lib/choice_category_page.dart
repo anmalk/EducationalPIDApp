@@ -56,7 +56,12 @@ class _ChoiceCategoryPageState extends State<ChoiceCategoryPage> {
         if (response.statusCode == 200) {
           final Map<String, dynamic> responseData = json.decode(response.body);
           id = responseData['_id']; // замените 'id' на актуальное поле из ответа сервера
+          User.id = responseData['_id'];
+          User.name = responseData['name'];
+          User.age = responseData['age'];
+          User.sex = responseData['gender'];
           print('ID: $id');
+
         } else {
           print('Error: ${response.statusCode}');
         }

@@ -74,6 +74,9 @@ class _MyHomePageState extends State<MyHomePage> {
           final Map<String, dynamic> responseData = json.decode(response.body);
           id = responseData['_id']; // замените 'id' на актуальное поле из ответа сервера
           print('ID: $id');
+          print(User.age);
+          print(User.sex);
+          print(User.name);
         } else {
           print('Error: ${response.statusCode}');
         }

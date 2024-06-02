@@ -222,7 +222,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // Ваш метод buildPictogramList
   Widget buildPictogramList() {
     final List<dynamic> pictograms = (jsonData['pictograms'] as List<dynamic>?) ?? [];
 

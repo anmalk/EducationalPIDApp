@@ -43,15 +43,9 @@ class Category {
 }
 
 class User {
-  final String id;
-  final String name;
-  final String sex;
-  final int age;
+  static String id = '';
+  static String name = '';
+  static String sex = '';
+  static String age = '';
 
-  const User({
-    required this.id,
-    required this.name,
-    required this.sex,
-    required this.age,
-  });
 }
