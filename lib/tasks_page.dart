@@ -1,14 +1,10 @@
-import 'dart:convert';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'services/storage_service.dart';  // Импортируйте ваш StorageService
-import 'page_widgets_tasks.dart';
-import 'models/task_more_controller.dart';
-import 'models/object_model.dart';
+import 'services/storage_service.dart';
+import 'widgets/page_widgets_tasks.dart';
+import 'widgets/task_more_controller.dart';
 import 'package:EducationalApp/services/db.dart';
+import 'services/api_service.dart';
 
 class TasksPage extends StatefulWidget {
   final String name;
@@ -21,9 +17,9 @@ class TasksPage extends StatefulWidget {
 
 class _TasksPageState extends State<TasksPage> {
   late Map<String, dynamic> jsonData;
-  final StorageService storageService = StorageService();  // Создайте экземпляр StorageService
-  late String id = ''; // замените 'id' на актуальное поле из ответа сервера
-
+  final StorageService storageService = StorageService();
+  late String id = '';
+  final ApiService apiService = ApiService();
 
   @override
   void initState() {
@@ -49,9 +45,6 @@ class _TasksPageState extends State<TasksPage> {
     jsonData = {};
     fetchData();
 
-
-
-
       print('Длина:');
       print(TaskController_more.length);
       print(TaskController_more.tasks);
@@ -59,7 +52,6 @@ class _TasksPageState extends State<TasksPage> {
       for (Task task in TaskController_more.tasks) {
         print('Task ID: ${task.images[0].url}');
       }
-
 
     print(TaskController_more.currentTaskIndex);
 
@@ -73,42 +65,12 @@ class _TasksPageState extends State<TasksPage> {
 
   Future<void> fetchData() async {
     try {
-      // Извлеките токен из хранилища
-      final String? token = await storageService.getToken();
-      try {
-        final response = await http.post(
-          Uri.parse('https://ait2-vladislav001.amvera.io/api/v1/information/pid'),
-          headers: {
-            'x-access-token': '$token',
-            'Content-Type': 'application/json',  // Укажите тип контента, если это приложение/JSON
-          },
-        );
-
-        if (response.statusCode == 200) {
-          final Map<String, dynamic> responseData = json.decode(response.body);
-          id = responseData['_id']; // замените 'id' на актуальное поле из ответа сервера
-          print('ID: $id');
-        } else {
-          print('Error: ${response.statusCode}');
-        }
-      } catch (error) {
-        print('Error: $error');
-      }
-
-      final response = await http.get(
-        Uri.parse('https://ait2-vladislav001.amvera.io/api/configuration_module/settings/item/66153763bca893857e412279/$id'),
-        headers: {'Authorization': 'Bearer $token'},
-      );
-
-      if (response.statusCode == 200) {
-        setState(() {
-          jsonData = json.decode(response.body);
-        });
-      } else {
-        throw Exception('Failed to load data');
-      }
+      final Map<String, dynamic> data = await apiService.fetchData(); // Получение данных с помощью ApiService
+      setState(() {
+        jsonData = data; // Обновление данных при получении
+      });
     } catch (error) {
-      print('Error fetching data: $error');
+      print('Error fetching data: $error'); // Вывод ошибки, если произошла ошибка получения данных
     }
   }
 

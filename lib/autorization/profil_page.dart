@@ -1,18 +1,18 @@
-import 'dart:convert';
 import 'package:EducationalApp/autorization/login_page.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:EducationalApp/services/storage_service.dart';
-import 'package:EducationalApp/my_app.dart';
 import 'package:EducationalApp/models/object_model.dart';
 
-class AutorizationPage extends StatelessWidget {
+// Основной виджет страницы, который выбирает страницу на основе состояния пользователя
+class ProfilPage extends StatelessWidget {
   final StorageService storageService = StorageService();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
+        // Если данные пользователя пусты, показываем страницу с кнопкой "Войти в аккаунт"
+        // В противном случае показываем страницу с информацией о пользователе
         child: User.name.isEmpty && User.sex.isEmpty && User.age.isEmpty
             ? LoginButton() // Страница с кнопкой "Войти в аккаунт"
             : UserInfoPage(), // Страница с информацией о пользователе
@@ -21,6 +21,7 @@ class AutorizationPage extends StatelessWidget {
   }
 }
 
+// Виджет с кнопкой "Войти в аккаунт"
 class LoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -29,12 +30,14 @@ class LoginButton extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          // Иконка регистрации
           Icon(
             Icons.app_registration,
             size: 120,
             color: Colors.blueAccent,
           ),
           SizedBox(height: 40),
+          // Приветственный текст
           Text(
             'Добро пожаловать в приложение!',
             style: TextStyle(
@@ -45,6 +48,7 @@ class LoginButton extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 30),
+          // Кнопка "Войти в аккаунт"
           ElevatedButton.icon(
             onPressed: () {
               Navigator.pushNamed(context, '/login');
@@ -67,6 +71,7 @@ class LoginButton extends StatelessWidget {
   }
 }
 
+// Виджет с информацией о пользователе
 class UserInfoPage extends StatelessWidget {
   final StorageService storageService = StorageService();
 
@@ -77,12 +82,14 @@ class UserInfoPage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          // Аватар пользователя
           CircleAvatar(
             radius: 60,
             backgroundColor: Colors.blueAccent,
             child: Icon(Icons.person, size: 60, color: Colors.white),
           ),
           SizedBox(height: 30),
+          // Информация о пользователе
           InfoRow(
             icon: Icons.person,
             label: 'Имя',
@@ -101,6 +108,7 @@ class UserInfoPage extends StatelessWidget {
             value: User.age,
           ),
           SizedBox(height: 30),
+          // Кнопка выхода из аккаунта
           ElevatedButton.icon(
             onPressed: () async {
               // Очистить данные пользователя
@@ -133,10 +141,11 @@ class UserInfoPage extends StatelessWidget {
   }
 }
 
+// Виджет для отображения строки информации о пользователе с иконкой
 class InfoRow extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
+  final IconData icon; // Иконка
+  final String label; // Метка
+  final String value; // Значение
 
   InfoRow({
     required this.icon,
@@ -148,12 +157,15 @@ class InfoRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
+        // Иконка
         Icon(icon, size: 40, color: Colors.blueAccent),
         SizedBox(width: 15),
+        // Метка
         Text(
           '$label: ',
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
+        // Значение
         Expanded(
           child: Text(
             value,
@@ -168,10 +180,9 @@ class InfoRow extends StatelessWidget {
 
 void main() {
   runApp(MaterialApp(
-    home: AutorizationPage(),
+    home: ProfilPage(),
     routes: {
       '/login': (context) => LoginPage(),
-      // Добавьте остальные маршруты
     },
   ));
 }

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:EducationalApp/services/db.dart';
 import 'models/task_controller.dart';
 import 'widgets/helpiconbutton.dart';
 import 'widgets/textcategorystatefulwidget.dart';
 import 'widgets/functions.dart';
-import 'models/object_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'help_page.dart';
 import 'result_page.dart';
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
@@ -49,6 +47,7 @@ Widget buildHomePage(Map<String, dynamic>? pageData) {
   );
 }
 
+// Виджет задания
 class PrevNextWidget extends StatefulWidget {
   final Map<String, dynamic>? prevData;
   final Map<String, dynamic>? nextData;
@@ -116,7 +115,15 @@ class _PrevNextWidgetState extends State<PrevNextWidget> {
                     alignment: Alignment.topRight,
                     child: HelpIconButton(
                       onPressed: () {
-                        // Обработчик нажатия кнопки
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return HelpDialog(
+                              title: 'Помощь',
+                              content: 'Выбери верный ответ, нажав на одну из кнопок!',
+                            );
+                          },
+                        );
                       },
                       helpImageUrlData: widget.helpImageUrlData,
                     ),
@@ -182,6 +189,7 @@ class _PrevNextWidgetState extends State<PrevNextWidget> {
   }
 }
 
+// Виджет автоматической прокрутки текста
 class AutoScrollText extends StatefulWidget {
   final String text;
   final TextStyle textStyle;
@@ -240,6 +248,7 @@ class _AutoScrollTextState extends State<AutoScrollText> {
   }
 }
 
+// Виджет текста
 class TextStatefulWidget extends StatefulWidget {
   static _TextStatefulWidgetState? _textStatefulWidgetState;
   final double fontSize; // Поле для размера текста
@@ -294,6 +303,7 @@ class _TextStatefulWidgetState extends State<TextStatefulWidget> {
   }
 }
 
+// Виджет кнопки "Предыдущее"
 class PrevWidget extends StatefulWidget {
   final Map<String, dynamic>? prevData;
 
@@ -338,6 +348,7 @@ class _PrevWidgetState extends State<PrevWidget> {
   }
 }
 
+// Виджет кнопки "Следующее"
 class NextWidget extends StatefulWidget {
   final Map<String, dynamic>? nextData;
 
@@ -396,6 +407,7 @@ class _NextWidgetState extends State<NextWidget> {
   }
 }
 
+// Виджет изображения
 class ImageWidget extends StatefulWidget {
   static _ImageWidgetState? _imageWidgetState;
   final int currentTaskIndex; // Добавлено поле currentTaskIndex
@@ -439,6 +451,7 @@ class _ImageWidgetState extends State<ImageWidget> {
   }
 }
 
+// Виджет индикатора прогресса выполнения заданий
 class ProgressBarWidget extends StatefulWidget {
   static _ProgressBarWidgetState? _progressBarWidgetState;
   final Map<String, dynamic> progressBarData;
@@ -481,20 +494,14 @@ class _ProgressBarWidgetState extends State<ProgressBarWidget> {
     );
   }
 
+  // Метод обновления индикатора прогресса
   void updateProgressBar() {
     setState(() {
     });
-    // print(TaskController.currentValue);
-    // print(TaskController.tasks[TaskController.currentTaskIndex].id_objects);
-    // print(TaskController.tasks[TaskController.currentTaskIndex].name);
-    // print(TaskController.tasks[TaskController.currentTaskIndex].name_categories);
-    // print(TaskController.tasks[TaskController.currentTaskIndex].url);
-    // print(TaskController.tasks[TaskController.currentTaskIndex].isAnswered);
-    // print(TaskController.tasks[TaskController.currentTaskIndex].isTrueAnswer);
-
   }
 }
 
+// Виджет кнопок ответов - категорий
 class CategoryIconButton extends StatefulWidget {
   final bool isCategoryEqual;
   final Map<String, dynamic>? categoryImageUrlData;
@@ -565,6 +572,7 @@ class _CategoryIconButtonState extends State<CategoryIconButton> {
   }
 }
 
+// Определение верности ответа
 void compareCategories(BuildContext context, bool Function(String?) areCategoriesEqual, String imageTrue, String imageFalse, String imageReturn) async {
   String? categoryFromFirestore = TaskController.tasks[TaskController.currentTaskIndex].name_categories;
   bool result = areCategoriesEqual(categoryFromFirestore);
@@ -591,6 +599,7 @@ void compareCategories(BuildContext context, bool Function(String?) areCategorie
   showResultDialog(context, result, imageTrue, imageFalse, imageReturn);
 }
 
+// Показ результата с звуковым эффектом
 void showResultDialog(BuildContext context, bool result, String imageTrue, String imageFalse, String imageReturn) {
   showDialog(
     context: context,

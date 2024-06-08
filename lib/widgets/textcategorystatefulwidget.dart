@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// Кнопка текста категории задания
 class TextCategoryStatefulWidget extends StatefulWidget {
   static _TextCategoryStatefulWidgetState? _textCategoryStatefulWidgetState;
   final String value;

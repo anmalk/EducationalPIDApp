@@ -1,54 +1,47 @@
-import 'dart:convert';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'services/storage_service.dart';  // Импортируйте ваш StorageService
+import 'services/storage_service.dart';
 import 'page_widgets.dart';
 import 'models/task_controller.dart';
-import 'models/object_model.dart';
 import 'package:EducationalApp/services/db.dart';
+import 'services/api_service.dart';
 
 class MyHomePage extends StatefulWidget {
-  final String name;
+  final String name; // Имени категории
 
-  MyHomePage({required this.name});
+  MyHomePage({required this.name}); // Конструктор
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MyHomePageState createState() => _MyHomePageState(); // Создание состояния для домашней страницы
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late Map<String, dynamic> jsonData;
-  final StorageService storageService = StorageService();  // Создайте экземпляр StorageService
-  late String id = ''; // замените 'id' на актуальное поле из ответа сервера
-
+  late Map<String, dynamic> jsonData; // Переменная для хранения данных JSON
+  final StorageService storageService = StorageService(); // StorageService
+  late String id = ''; // Идентификатор
+  final ApiService apiService = ApiService(); // Создаем экземпляр ApiService
 
   @override
   void initState() {
+    // Инициализация состояния виджета
     TaskController.currentTaskIndex = 0;
     TaskController.tasks.clear();
     TaskController.length = 0;
     TaskController.category = null;
     TaskController.currentValue = 0;
 
-    super.initState();
+    super.initState(); // Вызыв метода initState у родительского класса
     print('Выбранная категория: ${widget.name}');
-    DatabaseService.initFirebase();
-    jsonData = {};
-    fetchData();
+    DatabaseService.initFirebase(); // Инициализация Firebase
+    jsonData = {}; // Инициализацияя JSON с информацией о параметрах интерфейса
+    fetchData(); // Загрузка данные
 
-
-
-
-    // Вызываем метод загрузки задач из Firestore
+    // Загрузка заданий из Firestore для выбранной категории
     TaskController.loadTasksFromFirestore(widget.name).then((_) {
-      // Делаем что-то после загрузки задач
-      TaskController.length = TaskController.tasks.length;
+      // Выполнение действий после загрузки задач
+      TaskController.length = TaskController.tasks.length; // Установка длины списка задач
     });
 
-    //print(TaskController.currentTaskIndex);
-
+    // Получение данных категории из базы данных
     DatabaseService.getCategoryData(widget.name).then((category) {
       setState(() {
         TaskController.category = category;
@@ -56,61 +49,25 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-
   Future<void> fetchData() async {
     try {
-      // Извлеките токен из хранилища
-      final String? token = await storageService.getToken();
-      try {
-        final response = await http.post(
-          Uri.parse('https://ait2-vladislav001.amvera.io/api/v1/information/pid'),
-          headers: {
-            'x-access-token': '$token',
-            'Content-Type': 'application/json',  // Укажите тип контента, если это приложение/JSON
-          },
-        );
-
-        if (response.statusCode == 200) {
-          final Map<String, dynamic> responseData = json.decode(response.body);
-          id = responseData['_id']; // замените 'id' на актуальное поле из ответа сервера
-          print('ID: $id');
-          print(User.age);
-          print(User.sex);
-          print(User.name);
-        } else {
-          print('Error: ${response.statusCode}');
-        }
-      } catch (error) {
-        print('Error: $error');
-      }
-
-      final response = await http.get(
-        Uri.parse('https://ait2-vladislav001.amvera.io/api/configuration_module/settings/item/66153763bca893857e412279/$id'),
-        headers: {'Authorization': 'Bearer $token'},
-      );
-
-      if (response.statusCode == 200) {
-        setState(() {
-          jsonData = json.decode(response.body);
-        });
-      } else {
-        throw Exception('Failed to load data');
-      }
+      final Map<String, dynamic> data = await apiService.fetchData(); // Получение данные о параметрах интерфейса с помощью ApiService
+      setState(() {
+        jsonData = data; // Обновление данных при получении
+      });
     } catch (error) {
       print('Error fetching data: $error');
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-      body: jsonData == null || jsonData.isEmpty
+      body: jsonData == null || jsonData.isEmpty // Если данные пустые или равны null
           ? Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(), // Отображение индикатор загрузки
       )
-          : buildHomePage(jsonData['item']['settings']?['pages']),
+          : buildHomePage(jsonData['item']['settings']?['pages']), // Построение страницы с учетом полученных данных
     );
   }
 }

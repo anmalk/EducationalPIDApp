@@ -1,15 +1,11 @@
-import 'dart:convert';
 import 'package:EducationalApp/tasks_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'services/storage_service.dart';  // Импортируйте ваш StorageService
-import 'page_widgets.dart';
-import 'models/task_controller.dart';
-import 'models/object_model.dart';
+import 'services/storage_service.dart';
 import 'package:EducationalApp/services/db.dart';
 import 'my_home_page.dart';
+import '../services/api_service.dart';
+
 
 class ChoiceCategoryPage extends StatefulWidget {
   @override
@@ -17,78 +13,34 @@ class ChoiceCategoryPage extends StatefulWidget {
 }
 
 class _ChoiceCategoryPageState extends State<ChoiceCategoryPage> {
-  late Map<String, dynamic> jsonData;
-  final StorageService storageService = StorageService();  // Создайте экземпляр StorageService
-  late String id = ''; // замените 'id' на актуальное поле из ответа сервера
+  late Map<String, dynamic> jsonData; // Переменная для хранения данных
+  final StorageService storageService = StorageService();  // Экземпляр StorageService
+  late String id = ''; // Переменная для хранения ID
+  final ApiService apiService = ApiService(); // Экземпляр ApiService
 
 
   @override
   void initState() {
     super.initState();
-    DatabaseService.initFirebase();
-    jsonData = {};
-    fetchData();
-
-    // print(TaskController.currentTaskIndex);
-    // print('Задачи загружены:');
-    // for (Object task in TaskController.tasks) {
-    //   print('ID: ${task.id_objects}');
-    //   print('Name: ${task.name}');
-    //   print('Category Name: ${task.name_categories}');
-    //   print('URL: ${task.url}');
-    //   print('--------------------');
-    // }
+    DatabaseService.initFirebase(); // Инициализация Firebase
+    jsonData = {}; // Инициализация переменной данных
+    fetchData(); // Вызов метода для получения данных
   }
 
   Future<void> fetchData() async {
     try {
-      // Извлеките токен из хранилища
-      final String? token = await storageService.getToken();
-      try {
-        final response = await http.post(
-          Uri.parse('https://ait2-vladislav001.amvera.io/api/v1/information/pid'),
-          headers: {
-            'x-access-token': '$token',
-            'Content-Type': 'application/json',  // Укажите тип контента, если это приложение/JSON
-          },
-        );
-
-        if (response.statusCode == 200) {
-          final Map<String, dynamic> responseData = json.decode(response.body);
-          id = responseData['_id']; // замените 'id' на актуальное поле из ответа сервера
-          User.id = responseData['_id'];
-          User.name = responseData['name'];
-          User.age = responseData['age'];
-          User.sex = responseData['gender'];
-          print('ID: $id');
-
-        } else {
-          print('Error: ${response.statusCode}');
-        }
-      } catch (error) {
-        print('Error: $error');
-      }
-
-      final response = await http.get(
-        Uri.parse('https://ait2-vladislav001.amvera.io/api/configuration_module/settings/item/66153763bca893857e412279/$id'),
-        headers: {'Authorization': 'Bearer $token'},
-      );
-
-      if (response.statusCode == 200) {
-        setState(() {
-          jsonData = json.decode(response.body);
-        });
-      } else {
-        throw Exception('Failed to load data');
-      }
+      final Map<String, dynamic> data = await apiService.fetchData(); // Получение данных с помощью ApiService
+      setState(() {
+        jsonData = data; // Обновление данных при получении
+      });
     } catch (error) {
-      print('Error fetching data: $error');
+      print('Error fetching data: $error'); // Вывод ошибки, если произошла ошибка получения данных
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    //print(jsonData);
+    // Проверка наличия данных, отображение заглушки, если данные отсутствуют
     return Scaffold(
       body: jsonData == null || jsonData.isEmpty
           ? Center(
@@ -127,28 +79,36 @@ class _ChoiceCategoryPageState extends State<ChoiceCategoryPage> {
           ),
         ),
       )
-          : buildChoicePage(context, jsonData['item']['settings']?['pages']),
+          : buildChoicePage(context, jsonData['item']['settings']?['pages']), // Построение страницы выбора категории
     );
   }
 }
 
+// Виджет для построения страницы выбора категории
 Widget buildChoicePage(BuildContext context, Map<String, dynamic>? pageData) {
+  // Проверка наличия данных
   if (pageData == null || pageData.isEmpty) {
     return Center(
-      child: Text('Page data is empty.'),
+      child: Text('Page data is empty.'), // Отображение сообщения об отсутствии данных
     );
   }
 
+  // Построение интерфейса выбора категории
   return SingleChildScrollView(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(height: 100),
-        TextChoiceStatefulWidget(textValue: 'Выбери категорию', fontSize: 30,
-            textData: pageData['Select category']['Text_category']['params']['Is visible']),
+        // Виджет для отображения текста "Выбери категорию"
+        TextChoiceStatefulWidget(
+            textValue: 'Выбери категорию',
+            fontSize: 30,
+            textData: pageData['Select category']['Text_category']['params']['Is visible']
+        ),
         SizedBox(height: 40),
         Center(
+          // Виджет для отображения кнопки выбора категории
           child: ChoiceButton(
             onPressed: () {
               // Обработчик нажатия кнопки
@@ -172,12 +132,14 @@ Widget buildChoicePage(BuildContext context, Map<String, dynamic>? pageData) {
               physics: NeverScrollableScrollPhysics(),
               itemCount: documents.length,
               itemBuilder: (context, index) {
-                final Map<String, dynamic> data = documents[index]
-                    .data() as Map<String, dynamic>;
+                final Map<String, dynamic> data = documents[index].data() as Map<String, dynamic>;
                 return Card(
                   child: ListTile(
-                    title: TextChoiceStatefulWidget(textValue: data['name'], fontSize: 28,
-                      textData: pageData['Select category']['Text_card']['params']['Is visible'],),
+                    title: TextChoiceStatefulWidget(
+                      textValue: data['name'],
+                      fontSize: 28,
+                      textData: pageData['Select category']['Text_card']['params']['Is visible'],
+                    ),
                     subtitle: Image.network(data['url']),
                     onTap: () {
                       Navigator.push(
@@ -194,11 +156,15 @@ Widget buildChoicePage(BuildContext context, Map<String, dynamic>? pageData) {
           },
         ),
         SizedBox(height: 20), // Пустое пространство после ListView.builder
-        // Ваш новый виджет здесь
-        TextChoiceStatefulWidget(textValue: 'Попробуй новый тренажёр!', fontSize: 30,
-            textData: pageData['Select category']['Text_tasks']['params']['Is visible']),
+        // Виджет для отображения текста "Попробуй новый тренажёр!"
+        TextChoiceStatefulWidget(
+            textValue: 'Попробуй новый тренажёр!',
+            fontSize: 30,
+            textData: pageData['Select category']['Text_tasks']['params']['Is visible']
+        ),
         SizedBox(height: 40),
         Center(
+          // Виджет для отображения кнопки перехода к тренажёрам
           child: ChoiceButton(
             onPressed: () {
               // Обработчик нажатия кнопки
@@ -218,7 +184,7 @@ Widget buildChoicePage(BuildContext context, Map<String, dynamic>? pageData) {
   );
 }
 
-
+// Виджет для отображения текста с возможностью управления видимостью
 class TextChoiceStatefulWidget extends StatefulWidget {
   static _TextChoiceStatefulWidgetState? _textChoiceStatefulWidgetState;
   final double fontSize; // Поле для размера текста
@@ -254,7 +220,7 @@ class _TextChoiceStatefulWidgetState extends State<TextChoiceStatefulWidget> {
   }
 }
 
-
+// Виджет для кнопки выбора
 class ChoiceButton extends StatefulWidget {
   final VoidCallback onPressed;
   final Map<String, dynamic>? ChoiceData;

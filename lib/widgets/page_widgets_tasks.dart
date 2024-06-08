@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:EducationalApp/services/db.dart';
-import 'models/task_more_controller.dart';
-import 'widgets/helpiconbutton.dart';
-import 'widgets/functions.dart';
-import 'models/object_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'result_page.dart';
+import 'task_more_controller.dart';
+import '../result_page.dart';
 import 'dart:async';
-import 'tasks_page.dart';
-import 'page_widgets.dart';
 
 class GamePage extends StatefulWidget {
   final Map<String, dynamic>? pageData;

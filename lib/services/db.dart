@@ -4,14 +4,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:EducationalApp/models/object_model.dart';
 import 'package:EducationalApp/models/task_controller.dart';
 
-
+// Сервис для работы с базой данных Firestore
 class DatabaseService {
   // Метод для загрузки данных из Firestore и сохранения их в список объектов
   static Future<List<Object>> getObjects(String name) async {
     List<Object> objects = [];
 
     try {
-      // Получаем доступ к коллекции объектов в Firestore
+      // Получаем доступ к коллекции объектов в Firestore и выбираем объекты по категории
       QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance
           .collection('objects')
           .where('category', whereIn: [name])
@@ -27,7 +27,7 @@ class DatabaseService {
         ));
       });
 
-      return objects;
+      return objects; // Возвращаем список объектов
     } catch (e) {
       // Обработка ошибок, например, если произошла ошибка доступа к Firestore
       print('Error loading objects: $e');
@@ -35,11 +35,13 @@ class DatabaseService {
     }
   }
 
+  // Метод для инициализации Firebase
   static initFirebase() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
   }
 
+  // Метод для получения количества объектов в коллекции
   Future<int> getCountOfObjects() async {
     QuerySnapshot<Map<String, dynamic>> querySnapshot =
     await FirebaseFirestore.instance.collection('objects').get();
@@ -50,8 +52,10 @@ class DatabaseService {
     return count;
   }
 
+  // Метод для получения данных категории из Firestore
   static Future<Category?> getCategoryData(String name) async {
     try {
+      // Запрос к коллекции категорий для получения данных по имени категории
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('categories')
           .where('name', isEqualTo: name) // Замените 'ваше_значение_name' на фактическое имя
@@ -76,11 +80,3 @@ class DatabaseService {
     }
   }
 }
-
-
-
-
-
-
-
-

@@ -1,14 +1,15 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import '../services/storage_service.dart';
+import '../services/api_service.dart';
 
+// Основной виджет для страницы авторизации
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
+  // Переменные для хранения данных
   late Map<String, dynamic> jsonData;
   int selectedPictogramIndex = -1;
   List<Map<String, dynamic>> selectedLoginPictograms = [];
@@ -19,8 +20,9 @@ class _LoginPageState extends State<LoginPage> {
   String selectedPasswordValues = '';
   String? token;
 
-  // Инициализируйте сервис хранения
+  // Инициализация сервисов хранения и API
   final StorageService storageService = StorageService();
+  final ApiService apiService = ApiService();
 
   @override
   void initState() {
@@ -29,76 +31,44 @@ class _LoginPageState extends State<LoginPage> {
     fetchData();
   }
 
+  // Получения данных пиктограмм с сервера
   Future<void> fetchData() async {
     try {
-      // Извлеките токен из хранилища
-      token = await storageService.getToken();
-
-      final response = await http.get(
-        Uri.parse('https://ait2-vladislav001.amvera.io/api/v1/login/get-pictograms'),
-        headers: {'Authorization': 'Bearer $token'},
-      );
-
-      if (response.statusCode == 200) {
-        setState(() {
-          jsonData = json.decode(response.body);
-        });
-      } else {
-        print('Error fetching data: ${response.statusCode}');
-      }
+      jsonData = await apiService.fetchPictograms();
+      setState(() {});
     } catch (error) {
       print('Error fetching data: $error');
     }
   }
 
+  // Выполнения авторизации
   Future<void> performLogin() async {
     final String login = selectedLoginValues;
     final String password = selectedPasswordValues;
 
-    final Map<String, dynamic> data = {
-      'login': login,
-      'password': password,
-    };
-
     try {
-      final response = await http.post(
-        Uri.parse('https://ait2-vladislav001.amvera.io/api/v1/login/pid'),
-        body: json.encode(data),
-        headers: {'Content-Type': 'application/json'},
-      );
+      token = await apiService.login(login, password);
+      //Сохранение токена в защищенное хранилище
+      await storageService.saveToken(token!);
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = json.decode(response.body);
-        token = responseData['token'];
-
-        // Сохраните токен в хранилище
-        await storageService.saveToken(token!);
-
-        print('Token: $token');
-        navigateToHomePage();
-      } else {
-        print('Error: ${response.statusCode}');
-        if (response.statusCode == 401) {
-          // Показываем диалоговое окно только в случае ошибки 401
-          showLoginDialog();
-        }
-      }
+      print('Token: $token');
+      navigateToHomePage();
     } catch (error) {
       print('Error: $error');
-      // Показываем диалоговое окно в случае других ошибок
       showLoginDialog();
     }
   }
 
+  // Переход на домашнюю страницу после успешной авторизации
   void navigateToHomePage() {
-    // Ваш код для перехода на домашнюю страницу
     Navigator.pushReplacementNamed(context, '/');
   }
 
+  // Показ диалогового окна в случае ошибки авторизации
   void showLoginDialog() {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.red, // Устанавливаем красный цвет фона
+      backgroundColor: Colors.red,
       builder: (BuildContext context) {
         return Container(
           padding: EdgeInsets.all(16.0),
@@ -111,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white, // Устанавливаем белый цвет текста
+                  color: Colors.white,
                 ),
               ),
               SizedBox(height: 8.0),
@@ -119,14 +89,14 @@ class _LoginPageState extends State<LoginPage> {
                 'Введённые логин и/или пароль неверен или отсутствует интернет-соединение! Пожалуйста, проверьте ваше интернет-соединение или введите верный логин и пароль!',
                 style: TextStyle(
                   fontSize: 16.0,
-                  color: Colors.white, // Устанавливаем белый цвет текста
+                  color: Colors.white,
                 ),
               ),
               SizedBox(height: 16.0),
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pop(context); // Закрываем BottomSheet
+                    Navigator.pop(context);
                   },
                   child: Text('Закрыть сообщение'),
                 ),
@@ -138,6 +108,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -154,7 +125,6 @@ class _LoginPageState extends State<LoginPage> {
             child: IconButton(
               icon: Icon(Icons.close),
               onPressed: () {
-                // Происходит переход на MyApp
                 Navigator.pushReplacementNamed(context, '/');
               },
             ),
@@ -169,6 +139,7 @@ class _LoginPageState extends State<LoginPage> {
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 8.0),
+          // Отображение выбранных пиктограмм
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
@@ -183,14 +154,15 @@ class _LoginPageState extends State<LoginPage> {
           ),
           SizedBox(height: 16.0),
           Expanded(
+            // Отображение списка пиктограмм
             child: jsonData.isEmpty
                 ? Center(
               child: const Text('Это страница авторизации'),
             )
-                : buildPictogramList(), // вызываем метод внутри класса
+                : buildPictogramList(),
           ),
           SizedBox(height: 16.0),
-          // Добавлен отступ от нижней грани кнопки
+          // Кнопка переключения между вводом логина и пароля
           Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
             child: ElevatedButton(
@@ -204,16 +176,13 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
           SizedBox(height: 16.0),
-          // Добавлен отступ от нижней грани кнопки
+          // Кнопка для авторизации
           Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
             child: ElevatedButton(
               onPressed: () {
                 performLogin();
               },
-              style: ElevatedButton.styleFrom(
-                // Remove 'primary' as it is not a valid parameter
-              ),
               child: Text('Авторизоваться'),
             ),
           ),
@@ -222,6 +191,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  // Метод для создания списка пиктограмм
   Widget buildPictogramList() {
     final List<dynamic> pictograms = (jsonData['pictograms'] as List<dynamic>?) ?? [];
 
@@ -260,8 +230,10 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                // Отображение изображения пиктограммы
                 Image.network('https://${pictogram['image']?.toString() ?? ''}', height: 50, width: 50),
                 SizedBox(height: 4.0),
+                // Отображение значения пиктограммы
                 Text(pictogram['value']?.toString() ?? ''),
               ],
             ),
@@ -271,9 +243,9 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  // Метод для обновления выбранных значений логина и пароля
   void updateSelectedValues() {
     setState(() {
-
       if (isLoginSelected) {
         selectedLoginValues =
             selectedLoginPictograms.map((pictogram) => pictogram['value']?.toString() ?? '').join('');
@@ -286,10 +258,11 @@ class _LoginPageState extends State<LoginPage> {
     print('Selected Password Values: $selectedPasswordValues');
   }
 
+  // Метод для создания контейнера пиктограммы
   Widget buildPictogramContainer(Map<String, dynamic> pictogram) {
     return InkWell(
       onTap: () {
-        // Your code for handling the tap on a selected pictogram
+        // Ваш код для обработки нажатия на выбранную пиктограмму
       },
       child: Container(
         margin: EdgeInsets.all(8.0),
@@ -301,7 +274,6 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             Image.network('https://${pictogram['image']?.toString() ?? ''}', height: 50, width: 50),
             SizedBox(height: 4.0),
-            //Text(pictogram['value']?.toString() ?? ''),
           ],
         ),
       ),

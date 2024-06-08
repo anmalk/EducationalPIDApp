@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// Кнопка помощи
 class HelpIconButton extends StatefulWidget {
   final VoidCallback onPressed;
   final Map<String, dynamic>? helpImageUrlData;

@@ -2,6 +2,8 @@ import 'package:EducationalApp/models/object_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+// Класс Task представляет собой задачу, которая содержит идентификатор категории,
+// список объектов из разных категорий и список объектов из одной категории
 class Task {
   String idCategory;
   List<String> idObjectsDiffCategories;
@@ -14,16 +16,18 @@ class Task {
   });
 }
 
+// Контроллер TaskController управляет загрузкой задач из Firestore,
+// а также обработкой текущих задач, индексов и значений
 class TaskController {
+  static List<Object> tasks = []; // Список задач
+  static int currentTaskIndex = 0; // Текущий индекс задачи
+  static double currentValue = 0; // Текущее значение прогресса
+  static int length = 0; // Общая длина задач
+  static Category? category; // Текущая категория
+  static int score = 0; // Очки пользователя
+  static User? user; // Информация о пользователе
 
-  static List<Object> tasks = [];
-  static int currentTaskIndex = 0;
-  static double currentValue = 0;
-  static int length = 0;
-  static Category? category;
-  static int score = 0;
-  static User? user;
-
+  // Асинхронный метод для загрузки заданий из Firestore
   static Future<void> loadTasksFromFirestore(String nameCategory) async {
     try {
       // Получаем документы из коллекции tasks, где name_category равно заданному значению
@@ -32,7 +36,7 @@ class TaskController {
           .where('name_category', isEqualTo: nameCategory)
           .get();
 
-      tasks.clear(); // Очищаем список перед загрузкой новых данных
+      tasks.clear();
 
       // Для каждого документа в полученных результатах
       for (QueryDocumentSnapshot<Map<String, dynamic>> doc in querySnapshot.docs) {
@@ -46,6 +50,7 @@ class TaskController {
               .doc(id)
               .get();
 
+          // Если документ существует, создаем объект и добавляем его в список tasks
           if (objectDoc.exists) {
             Object object = Object(
               id_objects: objectDoc.id ?? '',
@@ -64,15 +69,23 @@ class TaskController {
     }
   }
 
+  // Метод для показа следующего изображения (увеличивает текущий индекс задачи)
   static void showNextImage() {
     currentTaskIndex = (currentTaskIndex + 1);
   }
 
+  // Метод для показа предыдущего изображения (уменьшает текущий индекс задачи)
   static void showPrevImage() {
     currentTaskIndex = (currentTaskIndex - 1 + length) % length;
   }
-  static void countValue(){
-    currentValue = (currentTaskIndex/length);
+
+  // Метод добавления количества очков
+  static void addScore(){
+     score = score++;
   }
 
+  // Метод для вычисления текущего значения прогресса
+  static void countValue() {
+    currentValue = (currentTaskIndex / length);
+  }
 }

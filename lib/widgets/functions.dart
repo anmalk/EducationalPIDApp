@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// Получение выбранного размера индикатора прогресса выполнения заданий
 double getSizeProgressBarData(String sizeValue) {
   switch (sizeValue) {
     case 'tiny':
@@ -17,6 +18,7 @@ double getSizeProgressBarData(String sizeValue) {
   }
 }
 
+// Получение иконки кнопки "Предыдущее"
 IconData getPrevIconData(String iconValue) {
   switch (iconValue) {
     case 'arrow':
@@ -30,6 +32,7 @@ IconData getPrevIconData(String iconValue) {
   }
 }
 
+// Получение иконки кнопки "Следующее"
 IconData getNextIconData(String iconValue) {
   switch (iconValue) {
     case 'arrow':
@@ -43,6 +46,7 @@ IconData getNextIconData(String iconValue) {
   }
 }
 
+// Получение опции текста
 String getOptionText(List<dynamic> options, String value) {
   for (var option in options) {
     if (option['value'] == value) {
@@ -52,6 +56,7 @@ String getOptionText(List<dynamic> options, String value) {
   return '';
 }
 
+// Получение иконки
 IconData getIconData(String iconValue) {
   switch (iconValue.toLowerCase()) {
     case 'arrow_forward':
@@ -64,6 +69,7 @@ IconData getIconData(String iconValue) {
   }
 }
 
+// Получение цвета кнопок
 Color getColorFromString(String colorName) {
   switch (colorName.toLowerCase()) {
     case 'green':
@@ -92,9 +98,8 @@ Color getColorFromString(String colorName) {
       return Colors.grey;
     case 'black':
       return Colors.black;
-  // Добавьте другие цвета по необходимости
     default:
-      return Colors.black; // Цвет по умолчанию, если ни один из цветов не совпадает
+      return Colors.black; // Цвет по умолчанию
   }
 }
 

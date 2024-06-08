@@ -4,7 +4,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:EducationalApp/services/firebase_options.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,  );
+  // Гарантия инициализации виджетов Flutter
+  WidgetsFlutterBinding.ensureInitialized();
+  // Инициализация Firebase приложение
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,  // Использование настройки Firebase для текущей платформы
+  );
+  // Запуск
   runApp(MyApp());
 }
