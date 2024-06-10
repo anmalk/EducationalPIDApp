@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'services/storage_service.dart';
+import 'package:EducationalApp/services/storage_service.dart';
 import 'page_widgets.dart';
-import 'models/task_controller.dart';
+import 'package:EducationalApp/models/task_controller.dart';
 import 'package:EducationalApp/services/db.dart';
-import 'services/api_service.dart';
+import 'package:EducationalApp/services/api_service.dart';
 
 class MyHomePage extends StatefulWidget {
   final String name; // Имени категории

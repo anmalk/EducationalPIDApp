@@ -1,10 +1,10 @@
-import 'package:EducationalApp/tasks_page.dart';
+import 'package:EducationalApp/pages/tasks_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'services/storage_service.dart';
+import '../services/storage_service.dart';
 import 'package:EducationalApp/services/db.dart';
-import 'my_home_page.dart';
-import '../services/api_service.dart';
+import './my_home_page.dart';
+import '../../services/api_service.dart';
 
 
 class ChoiceCategoryPage extends StatefulWidget {

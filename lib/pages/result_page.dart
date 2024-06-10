@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'services/storage_service.dart';  // Импортируйте ваш StorageService
+import '../services/storage_service.dart';  // Импортируйте ваш StorageService
 import 'package:EducationalApp/services/db.dart';
-import 'my_app.dart';
-import 'services/api_service.dart';
+import '../my_app.dart';
+import '../services/api_service.dart';
 
 // Страница результатов
 class ResultPage extends StatefulWidget {

@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'services/storage_service.dart';
-import 'widgets/page_widgets_tasks.dart';
-import 'widgets/task_more_controller.dart';
+import 'package:EducationalApp/services/storage_service.dart';
+import 'package:EducationalApp/widgets/page_widgets_tasks.dart';
+import 'package:EducationalApp/widgets/task_more_controller.dart';
 import 'package:EducationalApp/services/db.dart';
-import 'services/api_service.dart';
+import 'package:EducationalApp/services/api_service.dart';
 
 class TasksPage extends StatefulWidget {
   final String name;

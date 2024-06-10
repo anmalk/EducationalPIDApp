@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'task_more_controller.dart';
-import '../result_page.dart';
+import '../pages/result_page.dart';
 import 'dart:async';
 
 class GamePage extends StatefulWidget {

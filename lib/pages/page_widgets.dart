@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'models/task_controller.dart';
-import 'widgets/helpiconbutton.dart';
-import 'widgets/textcategorystatefulwidget.dart';
-import 'widgets/functions.dart';
-import 'help_page.dart';
-import 'result_page.dart';
+import 'package:EducationalApp/models/task_controller.dart';
+import 'package:EducationalApp/widgets/helpiconbutton.dart';
+import 'package:EducationalApp/widgets/textcategorystatefulwidget.dart';
+import 'package:EducationalApp/widgets/functions.dart';
+import 'package:EducationalApp/pages/help_page.dart';
+import 'package:EducationalApp/pages/result_page.dart';
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 

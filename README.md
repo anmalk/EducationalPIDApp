@@ -1,16 +1,40 @@
 # EducationalApp
 
-A new Flutter project.
+## Contents
+- [Описание](#Описание)
+- [Установка](#Установка)
+- [Структура](#Структура)
+- [Contributing](#Contributing)
+- [License](#License)
 
-## Getting Started
+## Описание
+Мобильное приложение предназначено для тренировки навыков классификации предметов для людей с ограниченными интеллектуальными возможностями. 
+Приложение имеет адаптируемый интерфейс с анимациями и звуковыми эффектами.
+Параметры интерфейса настраиваются специалистом специализированного учреждения для своих подопечных в [системе](https://ait2-vladislav001.amvera.io/), созданной на кафедре САПРиПК. В данной системе была создана конфигурационная панель и разработаны настройки для данного приложения, которые позволяют глубоко адаптировать интерфейс (настроить вид элементов интерфейса; включить или отключить отображение опциональных элементов и текста).
+Интерфейс загружается для конкретного пользователя после авторизации (введения логина и пароля пользователя в виде пиктограмм), реализованной с помощью API системы.
+Приложение после авторизации, взаимодействия с системой, получает параметры интерфейса для конкретного пользователя и загружает его в соответствии с настройками.
+Имеется возможность выбора типа категории предметов, которые нужно тренировать, непосредственно тренажёр по развитию навыков классификации предметов, доступен просмотр информации о пользователе и результатов выполнения заданий.
 
-This project is a starting point for a Flutter application.
+## Установка
 
-A few resources to get you started if this is your first Flutter project:
+- Убедиться, что установлены Flutter и Dart, а также среда разработки (Android Studio, Visual Studio Code или XCode)
+- Клонировать репозиторий.
+- Перейти в директорию проекта.
+- Запустить командой на эмуляторе Android или iOS, либо на реальном устройстве с Android и iOS.
+```bash
+flutter run
+```
+- Перейти к вкладке "Профиль", ввести логин и пароль пользователя (данные, которые есть в системе) в виде пиктограмм для последующей загрузки интерфейса приложения, настроенного под данного пользователя.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Структура
+
+Основные файлы проекта находятся в папке lib. Главный файл, который запускается: maim.dart.
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first
+to discuss what you would like to change.
+
+## License
+[GNU GPL-3.0](https://choosealicense.com/licenses/gpl-3.0/)

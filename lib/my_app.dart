@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'autorization/profil_page.dart';
 import 'autorization/login_page.dart';
-import 'choice_category_page.dart';
+import 'pages/choice_category_page.dart';
 
 class MyApp extends StatelessWidget {
   @override
